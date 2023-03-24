@@ -43,7 +43,6 @@ const apiRoutes = [
             let data = [new Date().toLocaleDateString()];
             body.forEach((/** @type {{ [s: string]: any; } | ArrayLike<any>} */ item) => { 
                 Object.values(item).forEach((value) => {
-                    console.log(value);
                     data.push(value);
                 });
             });

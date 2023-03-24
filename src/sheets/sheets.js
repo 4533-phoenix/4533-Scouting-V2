@@ -63,25 +63,6 @@ async function authorize() {
   return client;
 }
 
-// @ts-ignore
-// async function listMajors() {
-//   const sheets = google.sheets({version: "v4", client});
-//   const res = await sheets.spreadsheets.values.get({
-//     spreadsheetId: "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU",
-//     range: "Data!A1:E",
-//   });
-//   const rows = res.data.values;
-//   if (!rows || rows.length === 0) {
-//     console.log("No data found.");
-//     return;
-//   }
-//   console.log("Name, Major:");
-//   rows.forEach((row) => {
-//     // Print columns A and E, which correspond to indices 0 and 4.
-//     console.log(row);
-//   });
-// }
-
 // append data to a sheet using an array of values
 // @ts-ignore
 async function appendData(auth, data, sheetId, sheet) {
