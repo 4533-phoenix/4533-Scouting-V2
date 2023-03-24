@@ -27,6 +27,10 @@
     });
   });
 
+  function autoUpper(event) {
+    event.target.value = event.target.value.toUpperCase();
+  }
+
   const { form, data } = createForm({ onSubmit });
 </script>
 
@@ -44,6 +48,8 @@
       type="text"
       maxlength="2"
       required
+      on:input={autoUpper}
+      on:keypress={autoUpper}
     />
     <input
       name="matchNumber"

@@ -42,12 +42,22 @@
       canvasElement.width = image.width;
       canvasElement.height = image.height;
       // set the canvas sie to the image size
-      canvasElement.style.width = "100%";
-      canvasElement.style.height = "auto";
+      resize();
 
       // get grid vars
       const gridWidth = canvasElement.width / gridColumns;
       const gridHeight = canvasElement.height / gridRows;
+
+      // resize function
+      function resize() {
+        // set the canvas sie to the image size
+        if (window.innerWidth > 1000) {
+          canvasElement.style.width = "50%";
+        } else {
+          canvasElement.style.width = "100%";
+        }
+        canvasElement.style.height = "auto";
+      }
 
       // animate function
       function animate() {
@@ -94,6 +104,9 @@
 
       // start the animation
       animate();
+
+      // resize handler
+      window.addEventListener("resize", resize);
     });
     image.src = imageUrl;
   });

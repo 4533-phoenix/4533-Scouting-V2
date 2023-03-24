@@ -3,6 +3,7 @@
   import { createField } from "felte";
   import { onMount } from "svelte";
 
+  export let flipped = false;
   export let name;
 
   const { field, onInput, onBlur } = createField(name);
@@ -21,23 +22,37 @@
       canvasElement.width = image.width;
       canvasElement.height = image.height;
       // set the canvas sie to the image size
-      canvasElement.style.width = "100%";
-      canvasElement.style.height = "auto";
+      // make width smaller by half if it is on a large screen
+      resize();
+
+      // resize function
+      function resize() {
+        // set the canvas sie to the image size
+        if (window.innerWidth > 1000) {
+          canvasElement.style.width = "50%";
+        } else {
+          canvasElement.style.width = "100%";
+        }
+        canvasElement.style.height = "auto";
+      }
 
       // animate function
       function animate() {
         // clear the canvas
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // draw the image to the canvas rotate it 180 degrees
+        // draw the image to the canvas rotate it 180 degrees if flipped
         canvas.save();
-        canvas.translate(canvasElement.width, canvasElement.height);
-        canvas.rotate(Math.PI);
+        if (flipped) {
+          // rotate 180 degrees
+          canvas.translate(canvasElement.width, canvasElement.height);
+          canvas.rotate(Math.PI);
+        }
         canvas.drawImage(image, 0, 0);
         canvas.restore();
 
         // draw the circle
         canvas.beginPath();
-        canvas.arc(value[0], value[1], 10, 0, 2 * Math.PI);
+        canvas.arc(value[0], value[1], 5, 0, 2 * Math.PI);
         canvas.fillStyle = "red";
         canvas.fill();
 
@@ -66,20 +81,29 @@
 
       // start the animation
       animate();
+
+      // resize handler
+      window.addEventListener("resize", resize);
     });
     image.src = imageUrl;
   });
 </script>
 
 <div use:field>
-  <canvas bind:this={canvasElement} on:blur={onBlur} />
+  <canvas bind:this={canvasElement} on:blur={onBlur} class="fieldPositionCanvas" />
+  <button on:click={() => (flipped = !flipped)} class="fieldPositionFlipButton">Flip</button>
 </div>
 
-<br />
-
 <style>
-  canvas {
+  .fieldPositionCanvas {
     position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .fieldPositionFlipButton {
+    position: relative;
+    width: 5em;
     left: 50%;
     transform: translateX(-50%);
   }
