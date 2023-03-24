@@ -141,7 +141,7 @@
 
   <div>
     <label for="speedRating">Speed Rating:</label>
-    <input type="range" min="1" max="5" id="speedRating" name="speedRating">
+    <input type="range" min="1" max="5" id="speedRating" name="speedRating" />
   </div>
 
   <hr />
@@ -182,12 +182,47 @@
 
   <hr />
 
-  <input
-    name="comments"
-    placeholder="Comments"
-    type="text"
-    maxlength="255"
-  />
+  <input name="comments" placeholder="Comments" type="text" maxlength="255" />
+
+  <hr />
+
+  <div class="grid">
+    <div class="rating">
+      <label>
+        <input type="radio" name="rating" value="0" checked />
+      </label>
+      <label>
+        <input type="radio" name="rating" value="1" />
+        <span class="icon">★</span>
+      </label>
+      <label>
+        <input type="radio" name="rating" value="2" />
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+      </label>
+      <label>
+        <input type="radio" name="rating" value="3" />
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+      </label>
+      <label>
+        <input type="radio" name="rating" value="4" />
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+      </label>
+      <label>
+        <input type="radio" name="rating" value="5" />
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+      </label>
+    </div>
+  </div>
 
   <br />
 
@@ -200,3 +235,72 @@
     <button type="submit">Submit</button>
   </div>
 </form>
+
+<style>
+  .rating {
+    display: inline-block;
+    position: relative;
+    height: 50px;
+    line-height: 50px;
+    font-size: 50px;
+  }
+
+  .rating label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .rating label:last-child {
+    position: static;
+  }
+
+  .rating label:nth-child(1) {
+    z-index: 5;
+  }
+
+  .rating label:nth-child(2) {
+    z-index: 4;
+  }
+
+  .rating label:nth-child(3) {
+    z-index: 3;
+  }
+
+  .rating label:nth-child(4) {
+    z-index: 2;
+  }
+
+  .rating label:nth-child(5) {
+    z-index: 1;
+  }
+
+  .rating label input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  .rating label .icon {
+    float: left;
+    color: transparent;
+  }
+
+  .rating label:last-child .icon {
+    color: #ddd;
+  }
+
+  .rating:not(:hover) label input:checked ~ .icon,
+  .rating:hover label:hover input ~ .icon {
+    color: yellow;
+  }
+
+  .rating label input:focus:not(:checked) ~ .icon:last-child {
+    /* lighter than black, medium grey */
+    color: #ddd;
+    text-shadow: 0 0 5px yellow;
+  }
+</style>
