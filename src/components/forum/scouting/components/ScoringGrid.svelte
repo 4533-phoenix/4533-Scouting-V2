@@ -3,18 +3,27 @@
 
   import { onMount } from "svelte";
 
-  export let inputElement = null;
+  export let name = null;
   const imageUrl = "/images/scoring.png";
+  let inputElement = null;
+  let value = "[]";
 
-  onMount(() => {
-    console.log(inputElement);
-
-    if (!inputElement) return;
-  });
+  function onclick() {
+    value = "[1]";
+  }
 </script>
 
-<!-- render image -->
-<img src={imageUrl} alt="Scoring Grid" />
+<input
+  type="text"
+  bind:value
+  name={name}
+  bind:this={inputElement}
+  required
+  readonly
+  class="input"
+/>
+
+<img src={imageUrl} alt="Scoring Grid" on:click={onclick}/>
 
 <style>
   img {

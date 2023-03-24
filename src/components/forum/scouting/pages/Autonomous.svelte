@@ -35,8 +35,7 @@
 <h1>Autonomous</h1>
 
 <form use:form bind:this={subformContainer}>
-  <input name="autoScoringGrid" type="hidden" value="[]" bind:this={scoringGrid} />
-  <ScoringGrid inputElement={scoringGrid} />
+  <ScoringGrid name="autoScoringGrid" />
 
   <hr />
 
@@ -44,9 +43,9 @@
     <input
       name="gamePiecesAttempted"
       placeholder="Game pieces attempted"
-      type="number"
-      min="0"
-      max="100"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
       required
     />
   </div>

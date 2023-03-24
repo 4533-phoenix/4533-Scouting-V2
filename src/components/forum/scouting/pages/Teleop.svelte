@@ -1,6 +1,7 @@
 <script>
   // @ts-nocheck
 
+  import ScoringGrid from "../components/ScoringGrid.svelte";
   import { createForm } from "felte";
   import { onMount } from "svelte";
 
@@ -33,6 +34,10 @@
 <h1>Teleop</h1>
 
 <form use:form bind:this={subformContainer}>
+  <ScoringGrid name="teleopScoringGrid" />
+
+  <hr />
+
   <div class="grid">
     <div>
       <input

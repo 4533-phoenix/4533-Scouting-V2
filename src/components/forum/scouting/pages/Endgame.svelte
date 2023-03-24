@@ -95,17 +95,17 @@
     <input
       name="allianceDocked"
       placeholder="Alliance docked"
-      type="number"
-      min="0"
-      max="3"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
       required
     />
     <input
       name="linksScored"
       placeholder="Links Scored"
-      type="number"
-      min="0"
-      max="9"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
       required
     />
   </div>

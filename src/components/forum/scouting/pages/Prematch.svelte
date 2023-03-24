@@ -43,17 +43,17 @@
     <input
       name="matchNumber"
       placeholder="Match Number"
-      type="number"
-      min="0"
-      max="100"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
       required
     />
     <input
       name="teamNumber"
       placeholder="Team Number"
-      type="number"
-      min="1"
-      max="9999"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
       required
     />
   </div>
