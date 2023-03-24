@@ -1,6 +1,7 @@
 <script>
   // @ts-nocheck
 
+  import ScoringGrid from "../components/ScoringGrid.svelte";
   import { createForm } from "felte";
   import { onMount } from "svelte";
 
@@ -9,6 +10,7 @@
   export let onBack;
 
   let subformContainer = null;
+  let scoringGrid = null;
 
   onMount(() => {
     if (!subformContainer || !initialValues) return;
@@ -33,7 +35,11 @@
 <h1>Autonomous</h1>
 
 <form use:form bind:this={subformContainer}>
-  <!-- game pieces attempted -->
+  <input name="autoScoringGrid" type="hidden" value="[]" bind:this={scoringGrid} />
+  <ScoringGrid inputElement={scoringGrid} />
+
+  <hr />
+
   <div class="grid">
     <input
       name="gamePiecesAttempted"

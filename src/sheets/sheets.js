@@ -1,20 +1,20 @@
-import fs from 'fs/promises';
-import path from 'path';
-import {authenticate} from '@google-cloud/local-auth';
-import {google} from 'googleapis';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import fs from "fs/promises";
+import path from "path";
+import {authenticate} from "@google-cloud/local-auth";
+import {google} from "googleapis";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
-// The file token.json stores the user's access and refresh tokens, and is
+const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
+// The file token.json stores the user"s access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = path.join(__dirname, 'token.json');
-const CREDENTIALS_PATH = path.join(__dirname, 'credentials.json');
+const TOKEN_PATH = path.join(__dirname, "token.json");
+const CREDENTIALS_PATH = path.join(__dirname, "credentials.json");
 
 async function loadSavedCredentialsIfExist() {
   try {
@@ -34,7 +34,7 @@ async function saveCredentials(client) {
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
   const payload = JSON.stringify({
-    type: 'authorized_user',
+    type: "authorized_user",
     client_id: key.client_id,
     client_secret: key.client_secret,
     refresh_token: client.credentials.refresh_token,
@@ -65,17 +65,17 @@ async function authorize() {
 
 // @ts-ignore
 // async function listMajors() {
-//   const sheets = google.sheets({version: 'v4', client});
+//   const sheets = google.sheets({version: "v4", client});
 //   const res = await sheets.spreadsheets.values.get({
-//     spreadsheetId: '1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU',
-//     range: 'Data!A1:E',
+//     spreadsheetId: "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU",
+//     range: "Data!A1:E",
 //   });
 //   const rows = res.data.values;
 //   if (!rows || rows.length === 0) {
-//     console.log('No data found.');
+//     console.log("No data found.");
 //     return;
 //   }
-//   console.log('Name, Major:');
+//   console.log("Name, Major:");
 //   rows.forEach((row) => {
 //     // Print columns A and E, which correspond to indices 0 and 4.
 //     console.log(row);
@@ -86,13 +86,13 @@ async function authorize() {
 // @ts-ignore
 async function appendData(auth, data, sheetId, sheet) {
   // @ts-ignore
-  const sheets = google.sheets({version: 'v4', auth});
+  const sheets = google.sheets({version: "v4", auth});
   // @ts-ignore
   const res = sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
     range: `${sheet}!A1`,
-    valueInputOption: 'USER_ENTERED',
-    insertDataOption: 'INSERT_ROWS',
+    valueInputOption: "USER_ENTERED",
+    insertDataOption: "INSERT_ROWS",
     resource: {
       values: [data],
     },
@@ -101,7 +101,7 @@ async function appendData(auth, data, sheetId, sheet) {
 }
 
 // appendData([
-//   'test',
+//   "test",
 // ], "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU", "Data")
 
 
