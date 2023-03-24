@@ -187,12 +187,11 @@
   <hr />
 
   <div class="grid">
+    <label for="rating">Rating:</label>
+
     <div class="rating">
       <label>
-        <input type="radio" name="rating" value="0" checked />
-      </label>
-      <label>
-        <input type="radio" name="rating" value="1" />
+        <input type="radio" name="rating" value="1" checked />
         <span class="icon">★</span>
       </label>
       <label>
@@ -224,7 +223,7 @@
     </div>
   </div>
 
-  <br />
+  <br /><br />
 
   <div class="grid">
     <button
