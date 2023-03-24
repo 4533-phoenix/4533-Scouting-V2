@@ -81,6 +81,18 @@ async function appendData(auth, data, sheetId, sheet) {
   return res;
 }
 
+// @ts-ignore
+async function getAllData(auth, sheetId, sheet) {
+  // @ts-ignore
+  const sheets = google.sheets({version: "v4", auth});
+  // @ts-ignore
+  const res = sheets.spreadsheets.values.get({
+    spreadsheetId: sheetId,
+    range: `${sheet}!A1:AC`,
+  });
+  return res;
+}
+
 // appendData([
 //   "test",
 // ], "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU", "Data")
@@ -88,5 +100,6 @@ async function appendData(auth, data, sheetId, sheet) {
 
 export default {
   authorize: authorize,
-  appendData: appendData
+  appendData: appendData,
+  getAllData: getAllData
 }

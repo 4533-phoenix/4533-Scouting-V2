@@ -11,6 +11,7 @@
   <ul>
     <li><a href="/about" class="secondary">About</a></li>
     <li><a href="/contact" class="secondary">Contact</a></li>
+    <li><a href="/viewer" class="secondary">Viewer</a></li>
     <li><ToggleTheme /></li>
   </ul>
 </nav>

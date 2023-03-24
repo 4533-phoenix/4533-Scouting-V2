@@ -59,7 +59,22 @@ const apiRoutes = [
 
             // response
             return {
-                "response": JSON.stringify({ "status": "OK" }),
+                "response": { "status": "OK" },
+                "code": 200,
+            };
+        }
+    },
+    {
+        method: "GET",
+        url: "/getScoutingData",
+        // @ts-ignore
+        handler: async (req) => {
+            const auth = await sheets.authorize();
+            const data = await sheets.getAllData(auth, sheetId, "Data");
+
+            // response
+            return {
+                "response": { "status": "OK", "values": data.data.values },
                 "code": 200,
             };
         }
