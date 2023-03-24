@@ -187,33 +187,46 @@
   <hr />
 
   <div class="grid">
-    <label for="rating">Rating:</label>
+    <label for="robotRating">Robot Rating:</label>
 
     <div class="rating">
       <label>
-        <input type="radio" name="rating" value="1" checked />
+        <input type="radio" name="robotRating" value="1" checked />
         <span class="icon">★</span>
       </label>
       <label>
-        <input type="radio" name="rating" value="2" />
-        <span class="icon">★</span>
-        <span class="icon">★</span>
-      </label>
-      <label>
-        <input type="radio" name="rating" value="3" />
-        <span class="icon">★</span>
+        <input type="radio" name="robotRating" value="2" />
         <span class="icon">★</span>
         <span class="icon">★</span>
       </label>
       <label>
-        <input type="radio" name="rating" value="4" />
-        <span class="icon">★</span>
+        <input type="radio" name="robotRating" value="3" />
         <span class="icon">★</span>
         <span class="icon">★</span>
         <span class="icon">★</span>
       </label>
       <label>
-        <input type="radio" name="rating" value="5" />
+        <input type="radio" name="robotRating" value="4" />
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+      </label>
+      <label>
+        <input type="radio" name="robotRating" value="5" />
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+        <span class="icon">★</span>
+      </label>
+    </div>
+
+    <label for="appRating">App Rating:</label>
+
+    <div class="rating">
+      <label>
+        <input type="radio" name="appRating" value="5" checked/>
         <span class="icon">★</span>
         <span class="icon">★</span>
         <span class="icon">★</span>
