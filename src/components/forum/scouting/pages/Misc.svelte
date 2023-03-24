@@ -139,60 +139,9 @@
 
   <hr />
 
-  <div class="grid">
+  <div>
     <label for="speedRating">Speed Rating:</label>
-
-    <div class="radio">
-      <input
-        type="radio"
-        name="speedRating"
-        value="1"
-        id="speedRating1"
-        required
-      />
-      <label for="speedRating1">1</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="speedRating"
-        value="2"
-        id="speedRating2"
-        required
-      />
-      <label for="speedRating2">2</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="speedRating"
-        value="3"
-        id="speedRating3"
-        required
-        checked
-      />
-      <label for="speedRating3">3</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="speedRating"
-        value="4"
-        id="speedRating4"
-        required
-      />
-      <label for="speedRating4">4</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="speedRating"
-        value="5"
-        id="speedRating5"
-        required
-      />
-      <label for="speedRating5">5</label>
-    </div>
+    <input type="range" min="1" max="5" id="speedRating" name="speedRating">
   </div>
 
   <hr />

@@ -9,24 +9,9 @@
   export let onSubmit;
   export let onBack;
 
-  let subformContainer = null;
-  let scoringGrid = null;
-
   onMount(() => {
-    if (!subformContainer || !initialValues) return;
-
-    const inputs = subformContainer.querySelectorAll("input");
-
-    inputs.forEach((input) => {
-      input.value = initialValues[input.name];
-    });
-
-    const radios = subformContainer.querySelectorAll("input[type=radio]");
-    radios.forEach((radio) => {
-      if (radio.value === initialValues[radio.name]) {
-        radio.checked = true;
-      }
-    });
+    if (!initialValues) return;
+    data.set(initialValues);
   });
 
   const { form, data } = createForm({ onSubmit });
@@ -34,8 +19,8 @@
 
 <h1>Autonomous</h1>
 
-<form use:form bind:this={subformContainer}>
-  <ScoringGrid name="autoScoringGrid" bind:this={scoringGrid} />
+<form use:form>
+  <ScoringGrid name="autoScoringGrid" startValue={initialValues ? initialValues["autoScoringGrid"] : null} />
 
   <hr />
 

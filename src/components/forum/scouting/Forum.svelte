@@ -46,7 +46,6 @@
 
   function onBack(values) {
     if (page === 0) return;
-    console.log(values);
     pagesState[page] = values;
     pagesState = pagesState; // Triggering update
     page -= 1;

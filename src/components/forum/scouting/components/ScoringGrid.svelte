@@ -4,14 +4,21 @@
   import { onMount } from "svelte";
 
   export let name;
+  export let startValue;
 
-  const { field, onInput, onBlur } = createField(name);
+  let value;
+  if (startValue) {
+    value = startValue.split(",").map((v) => parseInt(v));
+  } else {
+    value = [];
+  }
+
+  const { field, onInput } = createField(name);
   const imageUrl = "/images/scoring.png";
 
   let canvasElement = null;
   let gridColumns = 9;
   let gridRows = 4;
-  let value = [];
 
   function gridPosToIndex(gridX, gridY) {
     return gridY * gridColumns + gridX;
@@ -50,6 +57,7 @@
 
       // resize function
       function resize() {
+        if (!canvasElement) return;
         // set the canvas sie to the image size
         if (window.innerWidth > 1000) {
           canvasElement.style.width = "50%";
@@ -61,6 +69,7 @@
 
       // animate function
       function animate() {
+        if (!canvasElement) return;
         // clear the canvas
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // draw the image to the canvas
@@ -113,13 +122,13 @@
 </script>
 
 <div use:field>
-  <canvas bind:this={canvasElement} on:blur={onBlur} />
+  <canvas class="scoringGridCanvas" bind:this={canvasElement} />
 </div>
 
 <br />
 
 <style>
-  canvas {
+  .scoringGridCanvas {
     position: relative;
     left: 50%;
     transform: translateX(-50%);

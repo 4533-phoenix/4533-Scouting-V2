@@ -9,23 +9,9 @@
   export let onSubmit;
   export let onBack;
 
-  let subformContainer = null;
-
   onMount(() => {
-    if (!subformContainer || !initialValues) return;
-
-    const inputs = subformContainer.querySelectorAll("input");
-
-    inputs.forEach((input) => {
-      input.value = initialValues[input.name];
-    });
-
-    const radios = subformContainer.querySelectorAll("input[type=radio]");
-    radios.forEach((radio) => {
-      if (radio.value === initialValues[radio.name]) {
-        radio.checked = true;
-      }
-    });
+    if (!initialValues) return;
+    data.set(initialValues);
   });
 
   const { form, data } = createForm({ onSubmit });
@@ -33,8 +19,8 @@
 
 <h1>Teleop</h1>
 
-<form use:form bind:this={subformContainer}>
-  <ScoringGrid name="teleopScoringGrid" />
+<form use:form>
+  <ScoringGrid name="teleopScoringGrid" startValue={initialValues ? initialValues["teleopScoringGrid"] : null} />
 
   <hr />
 

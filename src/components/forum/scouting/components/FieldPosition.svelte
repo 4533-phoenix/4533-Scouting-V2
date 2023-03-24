@@ -4,13 +4,20 @@
   import { onMount } from "svelte";
 
   export let flipped = false;
+  export let startValue;
   export let name;
 
-  const { field, onInput, onBlur } = createField(name);
+  let value;
+  if (startValue) {
+    value = startValue.split(",").map((v) => parseInt(v));
+  } else {
+    value = [0, 0];
+  }
+
+  const { field, onInput } = createField(name);
   const imageUrl = "/images/field.png";
 
   let canvasElement = null;
-  let value = [0, 0];
 
   onMount(() => {
     if (!canvasElement) return;
@@ -27,6 +34,7 @@
 
       // resize function
       function resize() {
+        if (!canvasElement) return;
         // set the canvas sie to the image size
         if (window.innerWidth > 1000) {
           canvasElement.style.width = "50%";
@@ -38,12 +46,12 @@
 
       // animate function
       function animate() {
+        if (!canvasElement) return;
         // clear the canvas
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // draw the image to the canvas rotate it 180 degrees if flipped
         canvas.save();
         if (flipped) {
-          // rotate 180 degrees
           canvas.translate(canvasElement.width, canvasElement.height);
           canvas.rotate(Math.PI);
         }
@@ -90,8 +98,8 @@
 </script>
 
 <div use:field>
-  <canvas bind:this={canvasElement} on:blur={onBlur} class="fieldPositionCanvas" />
-  <button on:click={() => (flipped = !flipped)} class="fieldPositionFlipButton">Flip</button>
+  <canvas bind:this={canvasElement} class="fieldPositionCanvas" />
+  <div on:click={() => (flipped = !flipped)} on:keydown={void(0)} class="fieldPositionFlipButton">Flip</div>
 </div>
 
 <style>
@@ -104,7 +112,15 @@
   .fieldPositionFlipButton {
     position: relative;
     width: 5em;
+    height: 1em;
     left: 50%;
     transform: translateX(-50%);
+    text-align: center;
+    margin-bottom: 15px;
+    user-select: none;
+  }
+
+  .fieldPositionFlipButton:hover {
+    cursor: pointer;
   }
 </style>

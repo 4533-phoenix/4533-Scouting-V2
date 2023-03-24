@@ -5,7 +5,7 @@
 <nav class="container-fluid">
   <ul>
     <li>
-      <a href="/" aria-label="Go Home" class="primary">Scouting App</a>
+      <a href="/" aria-label="Go Home" class="primary"><img src="/favicon.png" alt="Logo" /> Scouting App</a>
     </li>
   </ul>
   <ul>

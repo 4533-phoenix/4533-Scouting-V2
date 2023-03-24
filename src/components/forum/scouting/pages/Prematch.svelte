@@ -8,23 +8,9 @@
   export let initialValues;
   export let onSubmit;
 
-  let subformContainer = null;
-
   onMount(() => {
-    if (!subformContainer || !initialValues) return;
-
-    const inputs = subformContainer.querySelectorAll("input");
-
-    inputs.forEach((input) => {
-      input.value = initialValues[input.name];
-    });
-
-    const radios = subformContainer.querySelectorAll("input[type=radio]");
-    radios.forEach((radio) => {
-      if (radio.value === initialValues[radio.name]) {
-        radio.checked = true;
-      }
-    });
+    if (!initialValues) return;
+    data.set(initialValues);
   });
 
   function autoUpper(event) {
@@ -36,8 +22,8 @@
 
 <h1>Prematch</h1>
 
-<form use:form bind:this={subformContainer}>
-  <FieldPosition name="startingPosition" />
+<form use:form>
+  <FieldPosition name="startingPosition" startValue={initialValues ? initialValues["startingPosition"] : null} />
 
   <hr />
 

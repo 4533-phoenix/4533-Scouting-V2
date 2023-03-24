@@ -1,1 +1,2 @@
-<h1>Todo</h1>
+<h1>About</h1>
+<p>Made by drakeerv for team Phoenix 4533.</p>
