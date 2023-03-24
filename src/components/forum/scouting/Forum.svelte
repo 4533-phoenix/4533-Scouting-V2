@@ -40,13 +40,13 @@
           // If we get a non-200 response, we display an error message
           alert("Error!");
         }
+        antiCharlie = false;
       });
     } else {
       // If we're not on the last page, store our data and increase a step
       pagesState[page] = values;
       pagesState = pagesState; // Triggering update
       page += 1;
-      antiCharlie = false;
     }
   }
 
