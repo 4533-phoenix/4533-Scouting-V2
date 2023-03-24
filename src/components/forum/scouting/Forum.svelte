@@ -16,12 +16,17 @@
   // The state of all of our pages
   let pagesState = [];
 
+  // anti charlie
+  let antiCharlie = false;
+
   // Our handlers
   function onSubmit(values) {
     if (page === pages.length - 1) {
       // On our final page we POST our data somewhere
       pagesState[page] = values;
+      if (antiCharlie) return;
 
+      antiCharlie = true;
       return fetch("/api/addScoutingData", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,6 +46,7 @@
       pagesState[page] = values;
       pagesState = pagesState; // Triggering update
       page += 1;
+      antiCharlie = false;
     }
   }
 
