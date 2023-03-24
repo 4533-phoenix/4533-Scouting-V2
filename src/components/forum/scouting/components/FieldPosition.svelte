@@ -25,15 +25,17 @@
       canvasElement.style.height = `${
         (image.height / image.width) * (window.innerWidth / 2)
       }px`;
-      // draw the image to the canvas
-      canvas.drawImage(image, 0, 0);
 
       // animate function
       function animate() {
         // clear the canvas
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // draw the image to the canvas
+        // draw the image to the canvas rotate it 180 degrees
+        canvas.save();
+        canvas.translate(canvasElement.width, canvasElement.height);
+        canvas.rotate(Math.PI);
         canvas.drawImage(image, 0, 0);
+        canvas.restore();
 
         // draw the circle
         canvas.beginPath();

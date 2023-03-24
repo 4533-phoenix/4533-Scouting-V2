@@ -44,8 +44,6 @@
       // set the canvas sie to the image size
       canvasElement.style.width = `${window.innerWidth / 2}px`;
       canvasElement.style.height = `${(image.height / image.width) * (window.innerWidth / 2)}px`;
-      // draw the image to the canvas
-      canvas.drawImage(image, 0, 0);
 
       // get grid vars
       const gridWidth = canvasElement.width / gridColumns;
