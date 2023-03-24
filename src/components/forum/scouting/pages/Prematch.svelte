@@ -3,6 +3,7 @@
 
   import { createForm } from "felte";
   import { onMount } from "svelte";
+  import FieldPosition from "../components/FieldPosition.svelte";
 
   export let initialValues;
   export let onSubmit;
@@ -32,6 +33,10 @@
 <h1>Prematch</h1>
 
 <form use:form bind:this={subformContainer}>
+  <FieldPosition name="startingPosition" />
+
+  <hr />
+
   <div class="grid">
     <input
       name="scouterInitials"

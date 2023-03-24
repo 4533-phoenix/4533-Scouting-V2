@@ -35,7 +35,7 @@
 <h1>Autonomous</h1>
 
 <form use:form bind:this={subformContainer}>
-  <ScoringGrid name="autoScoringGrid" />
+  <ScoringGrid name="autoScoringGrid" bind:this={scoringGrid} />
 
   <hr />
 

@@ -96,7 +96,7 @@
       name="allianceDocked"
       placeholder="Alliance docked"
       type="tel"
-      pattern="[0-9]*"
+      pattern="[0-3]"
       novalidate
       required
     />
@@ -104,7 +104,7 @@
       name="linksScored"
       placeholder="Links Scored"
       type="tel"
-      pattern="[0-9]*"
+      pattern="[0-9]"
       novalidate
       required
     />

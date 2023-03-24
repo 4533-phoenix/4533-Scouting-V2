@@ -6,31 +6,10 @@
   export let name;
 
   const { field, onInput, onBlur } = createField(name);
-  const imageUrl = "/images/scoring.png";
+  const imageUrl = "/images/field.png";
 
   let canvasElement = null;
-  let gridColumns = 9;
-  let gridRows = 4;
-  let value = [];
-
-  function gridPosToIndex(gridX, gridY) {
-    return gridY * gridColumns + gridX;
-  }
-
-  function isEnabled(gridX, gridY) {
-    return value.includes(gridPosToIndex(gridX, gridY));
-  }
-
-  function setGrid(gridX, gridY, enabled) {
-    const index = gridPosToIndex(gridX, gridY);
-    if (enabled) {
-      if (!value.includes(index)) {
-        value.push(index);
-      }
-    } else {
-      value = value.filter((i) => i !== index);
-    }
-  }
+  let value = [0, 0];
 
   onMount(() => {
     if (!canvasElement) return;
@@ -43,13 +22,11 @@
       canvasElement.height = image.height;
       // set the canvas sie to the image size
       canvasElement.style.width = `${window.innerWidth / 2}px`;
-      canvasElement.style.height = `${(image.height / image.width) * (window.innerWidth / 2)}px`;
+      canvasElement.style.height = `${
+        (image.height / image.width) * (window.innerWidth / 2)
+      }px`;
       // draw the image to the canvas
       canvas.drawImage(image, 0, 0);
-
-      // get grid vars
-      const gridWidth = canvasElement.width / gridColumns;
-      const gridHeight = canvasElement.height / gridRows;
 
       // animate function
       function animate() {
@@ -58,15 +35,11 @@
         // draw the image to the canvas
         canvas.drawImage(image, 0, 0);
 
-        // draw the grid
-        for (let x = 0; x < gridColumns; x++) {
-          for (let y = 0; y < gridRows; y++) {
-            if (isEnabled(x, y)) {
-              canvas.fillStyle = "rgba(175, 0, 0, 0.5)";
-              canvas.fillRect(x * gridWidth, y * gridHeight, gridWidth, gridHeight);
-            }
-          }
-        }
+        // draw the circle
+        canvas.beginPath();
+        canvas.arc(value[0], value[1], 10, 0, 2 * Math.PI);
+        canvas.fillStyle = "red";
+        canvas.fill();
 
         // request the next animation frame
         requestAnimationFrame(animate);
@@ -74,21 +47,18 @@
 
       // add the click event listener
       canvasElement.addEventListener("click", (event) => {
-        // make the grid in canvas coordinates, not screen coordinates
         const rect = canvasElement.getBoundingClientRect();
         const windowX = event.clientX - rect.left;
         const windowY = event.clientY - rect.top;
 
         // get the canvas coordinates
-        const canvasX = windowX * (canvasElement.width / canvasElement.clientWidth);
-        const canvasY = windowY * (canvasElement.height / canvasElement.clientHeight);
+        const canvasX =
+          windowX * (canvasElement.width / canvasElement.clientWidth);
+        const canvasY =
+          windowY * (canvasElement.height / canvasElement.clientHeight);
 
-        // get the grid coordinates
-        const gridX = Math.floor(canvasX / gridWidth);
-        const gridY = Math.floor(canvasY / gridHeight);
-
-        // toggle the grid
-        setGrid(gridX, gridY, !isEnabled(gridX, gridY));
+        // set the value to canvas coordinates
+        value = [canvasX, canvasY];
 
         // update the input
         onInput(value);
