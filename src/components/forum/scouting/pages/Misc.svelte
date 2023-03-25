@@ -141,7 +141,7 @@
 
   <div>
     <label for="speedRating">Speed Rating:</label>
-    <input type="range" min="1" max="5" id="speedRating" name="speedRating" />
+    <input type="range" min="0" max="100" id="speedRating" name="speedRating" />
   </div>
 
   <hr />
@@ -226,7 +226,7 @@
 
     <div class="rating">
       <label>
-        <input type="radio" name="appRating" value="1" checked />
+        <input type="radio" name="appRating" value="1" />
         <span class="icon">★</span>
       </label>
       <label>
@@ -248,7 +248,7 @@
         <span class="icon">★</span>
       </label>
       <label>
-        <input type="radio" name="appRating" value="5" />
+        <input type="radio" name="appRating" value="5" checked />
         <span class="icon">★</span>
         <span class="icon">★</span>
         <span class="icon">★</span>
@@ -324,7 +324,8 @@
   }
 
   .rating label:last-child .icon {
-    color: #ddd;
+    transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition);
+    color: var(--color);
   }
 
   .rating:not(:hover) label input:checked ~ .icon,
@@ -334,7 +335,8 @@
 
   .rating label input:focus:not(:checked) ~ .icon:last-child {
     /* lighter than black, medium grey */
-    color: #ddd;
+    color: var(--color);
+    transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition);
     text-shadow: 0 0 5px yellow;
   }
 </style>

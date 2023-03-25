@@ -26,6 +26,15 @@
       pagesState[page] = values;
       if (antiCharlie) return;
 
+      let finalPagesState = pagesState;
+      finalPagesState.forEach((finalPageState, index) => {
+        Object.keys(finalPageState).forEach((key) => {
+          if (key === "speedRating") {
+            finalPagesState[index][key] = finalPageState[key] / 20;
+          }
+        });
+      });
+
       antiCharlie = true;
       return fetch("/api/addScoutingData", {
         method: "POST",
