@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-  <title>Server Finder</title>
+  <title>Scouting App</title>
 </svelte:head>
 
 <div class="app">
