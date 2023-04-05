@@ -1,45 +1,34 @@
 import sheets from "./sheets/sheets.js";
 
-const apiPath = "/api";
-const sheetId = "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU";
-const apiKey = "AIzaSyC6KoJ3_2Uymy08qpb1aWo8l5Kes0TQUOg"
+const API_PATH = "/api";
+const SHEET_ID = "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU";
 
-// @ts-ignore
-async function appendData(data) {
-    // use fetch
-    const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Data:append?insertDataOption=INSERT_ROWS&key=${apiKey}`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                values: [data],
-            }),
-        }
-    );
-
-    // check response
-    if (response.status !== 200) {
-        console.log(response);
-        return false;
-    }
-
-    return true;
-}
-
+/**
+ * @type {import("googleapis-common").BaseExternalAccountClient | import("googleapis-common").OAuth2Client | null}
+ */
+let client = null;
 
 const apiRoutes = [
     {
         method: "POST",
-        url: "/addScoutingData",
-        // @ts-ignore
-        handler: async (req) => {
-            // parse body
+        path: "/addScoutingData",
+        handler: async (/** @type {{ body: string; }} */ req) => {
+            if (client === null) {
+                return {
+                    "response": JSON.stringify({ "status": "ERROR" }),
+                    "code": 500,
+                };
+            }
+
+            if (!req.body) {
+                return {
+                    "response": JSON.stringify({ "status": "ERROR" }),
+                    "code": 500,
+                };
+            }
+
             const body = JSON.parse(req.body);
 
-            // get data
             let data = [new Date().toLocaleDateString()];
             body.forEach((/** @type {{ [s: string]: any; } | ArrayLike<any>} */ item) => { 
                 Object.values(item).forEach((value) => {
@@ -47,17 +36,15 @@ const apiRoutes = [
                 });
             });
             
-            // append data
-            sheets.authorize().then((auth) => {
-                sheets.appendData(auth, data, sheetId, "Data");
-            }).catch((err) => {
+
+            const res = sheets.appendData(client, data, SHEET_ID, "Data");
+            if (res === null) {
                 return {
                     "response": JSON.stringify({ "status": "ERROR" }),
                     "code": 500,
                 };
-            });
+            }
 
-            // response
             return {
                 "response": { "status": "OK" },
                 "code": 200,
@@ -66,13 +53,17 @@ const apiRoutes = [
     },
     {
         method: "GET",
-        url: "/getScoutingData",
-        // @ts-ignore
-        handler: async (req) => {
-            const auth = await sheets.authorize();
-            const data = await sheets.getAllData(auth, sheetId, "Data");
+        path: "/getScoutingData",
+        handler: async () => {
+            if (client === null) {
+                return {
+                    "response": JSON.stringify({ "status": "ERROR" }),
+                    "code": 500,
+                };
+            }
 
-            // response
+            const data = await sheets.getAllData(client, SHEET_ID, "Data");
+
             return {
                 "response": { "status": "OK", "values": data.data.values },
                 "code": 200,
@@ -81,11 +72,9 @@ const apiRoutes = [
     }
 ];
 
-// @ts-ignore
+/** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-    // API request
-    if (event.url.pathname.startsWith(apiPath)) {
-        // Get body
+    if (event.url.pathname.startsWith(API_PATH)) {
         let body = "";
         if (event.request.body) {
             while (!event.request.body.locked) {
@@ -103,7 +92,7 @@ export async function handle({ event, resolve }) {
         const route = apiRoutes.find(
             (ai) =>
                 ai.method === event.request.method &&
-                ai.url === event.url.pathname.replace(apiPath, "")
+                ai.path === event.url.pathname.replace(API_PATH, "")
         );
 
         if (route) {
@@ -135,6 +124,9 @@ export async function handle({ event, resolve }) {
         }
     }
 
-    // Regular request
     return await resolve(event);
 }
+
+sheets.authorize().then((auth) => {
+    client = auth;
+});

@@ -8,30 +8,27 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
-// The file token.json stores the user"s access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
 const TOKEN_PATH = path.join(__dirname, "token.json");
 const CREDENTIALS_PATH = path.join(__dirname, "credentials.json");
 
 async function loadSavedCredentialsIfExist() {
   try {
     const content = await fs.readFile(TOKEN_PATH);
-    // @ts-ignore
-    const credentials = JSON.parse(content);
+    const credentials = JSON.parse(content.toString());
     return google.auth.fromJSON(credentials);
   } catch (err) {
     return null;
   }
 }
 
-// @ts-ignore
+
+/**
+ * @param {import("googleapis-common").OAuth2Client} client
+ */
 async function saveCredentials(client) {
   const content = await fs.readFile(CREDENTIALS_PATH);
-  // @ts-ignore
-  const keys = JSON.parse(content);
+  const keys = JSON.parse(content.toString());
   const key = keys.installed || keys.web;
   const payload = JSON.stringify({
     type: "authorized_user",
@@ -42,31 +39,30 @@ async function saveCredentials(client) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
-/**
- * Load or request or authorization to call APIs.
- *
- */
 async function authorize() {
-  let client = await loadSavedCredentialsIfExist();
+  const client = await loadSavedCredentialsIfExist();
   if (client) {
     return client;
   }
-  // @ts-ignore
-  client = await authenticate({
+
+  const new_client = await authenticate({
     scopes: SCOPES,
     keyfilePath: CREDENTIALS_PATH,
   });
-  // @ts-ignore
-  if (client.credentials) {
-    await saveCredentials(client);
+  if (new_client && new_client.credentials) {
+    await saveCredentials(new_client);
   }
-  return client;
+  return new_client;
 }
 
 // append data to a sheet using an array of values
-// @ts-ignore
+/**
+ * @param {any} auth
+ * @param {ArrayLike<any>} data
+ * @param {string} sheetId
+ * @param {string} sheet
+ */
 async function appendData(auth, data, sheetId, sheet) {
-  // @ts-ignore
   const sheets = google.sheets({version: "v4", auth});
   // @ts-ignore
   const res = sheets.spreadsheets.values.append({
@@ -81,22 +77,19 @@ async function appendData(auth, data, sheetId, sheet) {
   return res;
 }
 
-// @ts-ignore
+/**
+ * @param {any} auth
+ * @param {string} sheetId
+ * @param {string} sheet
+ */
 async function getAllData(auth, sheetId, sheet) {
-  // @ts-ignore
   const sheets = google.sheets({version: "v4", auth});
-  // @ts-ignore
   const res = sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
     range: `${sheet}!A1:AC`,
   });
   return res;
 }
-
-// appendData([
-//   "test",
-// ], "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU", "Data")
-
 
 export default {
   authorize: authorize,
