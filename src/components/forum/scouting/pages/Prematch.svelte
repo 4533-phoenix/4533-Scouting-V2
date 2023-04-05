@@ -23,7 +23,10 @@
 <h1>Prematch</h1>
 
 <form use:form>
-  <FieldPosition name="startingPosition" startValue={initialValues ? initialValues["startingPosition"] : null} />
+  <FieldPosition
+    name="startingPosition"
+    startValue={initialValues ? initialValues["startingPosition"] : null}
+  />
 
   <hr />
 
@@ -95,7 +98,7 @@
     </div>
   </div>
 
-  <br/>
+  <br />
 
   <div class="grid">
     <button type="submit" class="outline">Next page</button>

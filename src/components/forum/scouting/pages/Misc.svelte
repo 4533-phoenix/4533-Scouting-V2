@@ -324,7 +324,9 @@
   }
 
   .rating label:last-child .icon {
-    transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition);
+    transition: background-color var(--transition),
+      border-color var(--transition), color var(--transition),
+      box-shadow var(--transition);
     color: var(--color);
   }
 
@@ -336,7 +338,9 @@
   .rating label input:focus:not(:checked) ~ .icon:last-child {
     /* lighter than black, medium grey */
     color: var(--color);
-    transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition);
+    transition: background-color var(--transition),
+      border-color var(--transition), color var(--transition),
+      box-shadow var(--transition);
     text-shadow: 0 0 5px yellow;
   }
 </style>

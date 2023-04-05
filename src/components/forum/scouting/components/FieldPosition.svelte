@@ -99,7 +99,13 @@
 
 <div use:field>
   <canvas bind:this={canvasElement} class="fieldPositionCanvas" />
-  <div on:click={() => (flipped = !flipped)} on:keydown={void(0)} class="fieldPositionFlipButton">Flip</div>
+  <div
+    on:click={() => (flipped = !flipped)}
+    on:keydown={void 0}
+    class="fieldPositionFlipButton"
+  >
+    Flip
+  </div>
 </div>
 
 <style>

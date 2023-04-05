@@ -20,17 +20,16 @@
 <h1>Teleop</h1>
 
 <form use:form>
-  <ScoringGrid name="teleopScoringGrid" startValue={initialValues ? initialValues["teleopScoringGrid"] : null} />
+  <ScoringGrid
+    name="teleopScoringGrid"
+    startValue={initialValues ? initialValues["teleopScoringGrid"] : null}
+  />
 
   <hr />
 
   <div class="grid">
     <div>
-      <input
-        name="smartPlacement"
-        type="checkbox"
-        id="smartPlacement"
-      />
+      <input name="smartPlacement" type="checkbox" id="smartPlacement" />
       <label for="smartPlacement">Smart placement</label>
     </div>
 
@@ -66,13 +65,7 @@
       <label for="cubes">Cubes</label>
     </div>
     <div class="radio">
-      <input
-        type="radio"
-        name="floorPickup"
-        value="Both"
-        id="both"
-        required
-      />
+      <input type="radio" name="floorPickup" value="Both" id="both" required />
       <label for="both">Both</label>
     </div>
     <div class="radio">

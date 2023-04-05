@@ -80,7 +80,12 @@
           for (let y = 0; y < gridRows; y++) {
             if (isEnabled(x, y)) {
               canvas.fillStyle = "rgba(175, 0, 0, 0.5)";
-              canvas.fillRect(x * gridWidth, y * gridHeight, gridWidth, gridHeight);
+              canvas.fillRect(
+                x * gridWidth,
+                y * gridHeight,
+                gridWidth,
+                gridHeight
+              );
             }
           }
         }
@@ -97,8 +102,10 @@
         const windowY = event.clientY - rect.top;
 
         // get the canvas coordinates
-        const canvasX = windowX * (canvasElement.width / canvasElement.clientWidth);
-        const canvasY = windowY * (canvasElement.height / canvasElement.clientHeight);
+        const canvasX =
+          windowX * (canvasElement.width / canvasElement.clientWidth);
+        const canvasY =
+          windowY * (canvasElement.height / canvasElement.clientHeight);
 
         // get the grid coordinates
         const gridX = Math.floor(canvasX / gridWidth);
