@@ -11,7 +11,7 @@
   if (startValue) {
     value = startValue.split(",").map((v) => parseInt(v));
   } else {
-    value = [0, 0];
+    value = null;
   }
 
   const { field, onInput } = createField(name);
@@ -46,10 +46,15 @@
 
       // animate function
       function animate() {
-        if (!canvasElement) return;
+        // request the next animation frame
+        requestAnimationFrame(animate);
+
         // clear the canvas
+        if (!canvasElement) return;
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
         // draw the image to the canvas rotate it 180 degrees if flipped
+        if (!canvasElement) return;
         canvas.save();
         if (flipped) {
           canvas.translate(canvasElement.width, canvasElement.height);
@@ -59,13 +64,11 @@
         canvas.restore();
 
         // draw the circle
+        if (!value) return;
         canvas.beginPath();
         canvas.arc(value[0], value[1], 5, 0, 2 * Math.PI);
         canvas.fillStyle = "red";
         canvas.fill();
-
-        // request the next animation frame
-        requestAnimationFrame(animate);
       }
 
       // add the click event listener
@@ -75,10 +78,20 @@
         const windowY = event.clientY - rect.top;
 
         // get the canvas coordinates
-        const canvasX =
-          windowX * (canvasElement.width / canvasElement.clientWidth);
-        const canvasY =
-          windowY * (canvasElement.height / canvasElement.clientHeight);
+        let canvasX, canvasY;
+        if (flipped) {
+          canvasX =
+            canvasElement.width -
+            windowX * (canvasElement.width / canvasElement.clientWidth);
+          canvasY =
+            canvasElement.height -
+            windowY * (canvasElement.height / canvasElement.clientHeight);
+        } else {
+          canvasX =
+            windowX * (canvasElement.width / canvasElement.clientWidth);
+          canvasY =
+            windowY * (canvasElement.height / canvasElement.clientHeight);
+        }
 
         // set the value to canvas coordinates
         value = [canvasX, canvasY];

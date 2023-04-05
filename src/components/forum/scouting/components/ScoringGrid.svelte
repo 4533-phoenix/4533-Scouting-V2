@@ -69,10 +69,15 @@
 
       // animate function
       function animate() {
-        if (!canvasElement) return;
+        // request the next animation frame
+        requestAnimationFrame(animate);
+        
         // clear the canvas
+        if (!canvasElement) return;
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
         // draw the image to the canvas
+        if (!canvasElement) return;
         canvas.drawImage(image, 0, 0);
 
         // draw the grid
@@ -89,9 +94,6 @@
             }
           }
         }
-
-        // request the next animation frame
-        requestAnimationFrame(animate);
       }
 
       // add the click event listener
