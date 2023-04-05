@@ -1,9 +1,10 @@
 <script>
   // @ts-nocheck
+  import { browser } from "$app/environment";
   import { createField } from "felte";
   import { onMount } from "svelte";
 
-  export let flipped = false;
+  export let flipped = isLocalFlipped();
   export let startValue;
   export let name;
 
@@ -78,20 +79,10 @@
         const windowY = event.clientY - rect.top;
 
         // get the canvas coordinates
-        let canvasX, canvasY;
-        if (flipped) {
-          canvasX =
-            canvasElement.width -
-            windowX * (canvasElement.width / canvasElement.clientWidth);
-          canvasY =
-            canvasElement.height -
-            windowY * (canvasElement.height / canvasElement.clientHeight);
-        } else {
-          canvasX =
-            windowX * (canvasElement.width / canvasElement.clientWidth);
-          canvasY =
-            windowY * (canvasElement.height / canvasElement.clientHeight);
-        }
+        const canvasX =
+          windowX * (canvasElement.width / canvasElement.clientWidth);
+        const canvasY =
+          windowY * (canvasElement.height / canvasElement.clientHeight);
 
         // set the value to canvas coordinates
         value = [canvasX, canvasY];
@@ -108,12 +99,39 @@
     });
     image.src = imageUrl;
   });
+
+  // save to local storage if it is flipped
+  function flipField() {
+    // change the flipped value
+    flipped = !flipped;
+
+    // save to local storage
+    if (flipped) {
+      localStorage.setItem("fieldPositionFlipped", "true");
+    } else {
+      localStorage.removeItem("fieldPositionFlipped");
+    }
+
+    // flip the value
+    if (value) {
+      value = [canvasElement.width - value[0], canvasElement.height - value[1]];
+    }
+  }
+
+  // load from local storage if it is flipped
+  function isLocalFlipped() {
+    if (browser) {
+      return localStorage.getItem("fieldPositionFlipped") === "true";
+    } else {
+      return false;
+    }
+  }
 </script>
 
 <div use:field>
   <canvas bind:this={canvasElement} class="fieldPositionCanvas" />
   <div
-    on:click={() => (flipped = !flipped)}
+    on:click={flipField}
     on:keydown={void 0}
     class="fieldPositionFlipButton"
   >
