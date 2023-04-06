@@ -1,12 +1,13 @@
 <script>
   import ToggleTheme from "./ToggleTheme.svelte";
+  import logoSrc from "./images/icon.png"
 </script>
 
 <nav class="container-fluid">
   <ul>
     <li>
       <a href="/" aria-label="Go Home" class="primary"
-        ><img src="/favicon.png" alt="Logo" /> Scouting App</a
+        ><img src={logoSrc} alt="Logo" /> Scouting App</a
       >
     </li>
   </ul>

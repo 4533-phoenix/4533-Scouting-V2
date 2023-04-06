@@ -2,6 +2,7 @@
   import { browser } from "$app/environment";
   import { createField } from "felte";
   import { onMount } from "svelte";
+  import imgSrc from "../images/field.png";
 
   export let flipped = isLocalFlipped();
   export let startValue;
@@ -10,7 +11,6 @@
   let value = startValue ? startValue.split(",").map((/** @type {string} */ v) => parseInt(v)) : null;
 
   const { field, onInput } = createField(name);
-  const imageUrl = "/images/field.png";
 
   /**
    * @type {HTMLCanvasElement | null}
@@ -103,7 +103,7 @@
       // resize handler
       window.addEventListener("resize", resize);
     });
-    image.src = imageUrl;
+    image.src = imgSrc;
   });
 
   // save to local storage if it is flipped

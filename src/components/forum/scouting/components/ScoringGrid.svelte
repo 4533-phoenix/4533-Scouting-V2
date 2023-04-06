@@ -1,6 +1,7 @@
 <script>
   import { createField } from "felte";
   import { onMount } from "svelte";
+  import imgSrc from "../images/scoring.png";
 
   export let name;
   export let startValue;
@@ -8,7 +9,6 @@
   let value = startValue ? startValue.split(",").map((/** @type {string} */ v) => parseInt(v)) : [];
 
   const { field, onInput } = createField(name);
-  const imageUrl = "/images/scoring.png";
 
   /**
    * @type {HTMLCanvasElement | null}
@@ -140,7 +140,7 @@
       // resize handler
       window.addEventListener("resize", resize);
     });
-    image.src = imageUrl;
+    image.src = imgSrc;
   });
 </script>
 
