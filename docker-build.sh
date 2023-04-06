@@ -1,0 +1,1 @@
+docker build -t 4533-scouting-app:latest .
