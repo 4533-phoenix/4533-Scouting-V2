@@ -59,9 +59,15 @@
 
     captureFunc = () => {
       if (!canvas || !videoElement || !canvasElement) return;
-      // set the canvas size to the video size
-      canvasElement.width = videoElement.videoWidth;
-      canvasElement.height = videoElement.videoHeight;
+      // scale so the longest side is 640px
+      const scale = Math.max(
+        videoElement.videoWidth / 640,
+        videoElement.videoHeight / 640
+      );
+
+      // set the canvas size to the video size scaled
+      canvasElement.width = videoElement.videoWidth / scale;
+      canvasElement.height = videoElement.videoHeight / scale;
 
       // draw the video at that frame
       canvas.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
