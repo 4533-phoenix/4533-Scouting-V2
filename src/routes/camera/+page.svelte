@@ -24,13 +24,14 @@
 
   let captured = false;
   let uploading = false;
+  let uploadingProgress = 0;
 
-      const constraints = {
-      video: {
-        facingMode: "environment"
-      },
-      audio: false
-    };
+  const constraints = {
+    video: {
+      facingMode: "environment",
+    },
+    audio: false,
+  };
 
   onMount(() => {
     if (!canvasElement) return;
@@ -57,7 +58,10 @@
     };
 
     uploadFunc = async () => {
-      if (!canvasElement || !teamNumberElement || !captured || uploading) return;
+      if (!canvasElement || !teamNumberElement || !captured || uploading)
+        return;
+
+      uploadingProgress = 0;
       uploading = true;
       const data = canvasElement.toDataURL("image/png");
       const file = await (await fetch(data)).blob();
@@ -66,12 +70,20 @@
       const dateString = new Date().toISOString().split("T")[0];
       const timeString = new Date().toISOString().split("T")[1].split(".")[0];
 
+      const customXHR = new XMLHttpRequest();
+      customXHR.upload.addEventListener("progress", function (e) {
+        if (e.loaded <= file.size) {
+          uploadingProgress = Math.round((e.loaded / file.size) * 100);
+        }
+      });
+
       imagekit
         .upload({
           file: file,
           fileName: `${teamNumber}-${dateString}-${timeString}.png`,
           folder: "scouting",
           tags: [teamNumber, dateString],
+          xhr: customXHR,
         })
         .then(() => {
           uploading = false;
@@ -91,7 +103,7 @@
       .then((stream) => {
         if (!videoElement) return;
         videoElement.srcObject = stream;
-        
+
         if (!canvasElement) return;
         const streamSettings = stream.getVideoTracks()[0].getSettings();
         const streamHeight = streamSettings.height || 0;
@@ -128,15 +140,19 @@
       pattern="[0-9]*"
       bind:this={teamNumberElement}
     />
-    
+
     {#if uploading}
       <button disabled><CameraIris /></button>
-      <button disabled aria-busy="true"></button>
+      <button disabled aria-busy="true" />
     {:else}
       <button on:click={captureFunc}><CameraIris /></button>
       <button on:click={uploadFunc}><Upload /></button>
     {/if}
   </div>
+
+  {#if uploading}
+    <progress value={uploadingProgress} max="100" />
+  {/if}
 </div>
 
 <style>

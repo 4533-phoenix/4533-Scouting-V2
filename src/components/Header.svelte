@@ -13,9 +13,15 @@
   <ul>
     <li><a href="/about" class="secondary">About</a></li>
     <li><a href="/contact" class="secondary">Contact</a></li>
-    <li><a href="/viewer" class="secondary">Viewer</a></li>
-    <li><a href="/camera" class="secondary">Camera</a></li>
-    <li><ToggleTheme /></li>
+    <li><a href="/viewer" class="secondary">View</a></li>
+    <li><a href="/camera" class="secondary">Cam</a></li>
+    <li id="toggle-theme"><ToggleTheme /></li>
   </ul>
 </nav>
 <hr />
+
+<style>
+  #toggle-theme {
+    min-width: 4rem;
+  }
+</style>
