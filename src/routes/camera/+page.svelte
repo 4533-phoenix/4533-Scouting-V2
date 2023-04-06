@@ -41,10 +41,10 @@
     const constraints = {
       video: {
         facingMode: "environment",
+        width: {exact: 640},
+        height: {exact: 480}
       },
-      audio: false,
-      width: 640,
-      height: 480
+      audio: false
     };
 
     captureFunc = () => {
