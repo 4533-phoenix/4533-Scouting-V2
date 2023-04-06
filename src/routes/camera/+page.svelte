@@ -2,6 +2,7 @@
   import imagekit from "imagekit-javascript";
   import { onMount, onDestroy } from "svelte";
 
+  import Camera from "svelte-material-icons/Camera.svelte";
   import CameraIris from "svelte-material-icons/CameraIris.svelte";
   import Upload from "svelte-material-icons/Upload.svelte";
 
@@ -27,7 +28,7 @@
 
   let captureFunc = () => {};
   let uploadFunc = () => {};
-
+  let userCamFunc = () => {};
 
   let teams = [4533, 342];
   let captured = false;
@@ -58,11 +59,12 @@
 
     captureFunc = () => {
       if (!canvas || !videoElement || !canvasElement) return;
-      const width = canvasElement.width;
-      const height = canvasElement.height;
+      // set the canvas size to the video size
+      canvasElement.width = videoElement.videoWidth;
+      canvasElement.height = videoElement.videoHeight;
 
       // draw the video at that frame
-      canvas.drawImage(videoElement, 0, 0, width, height);
+      canvas.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
       captured = true;
     };
 
@@ -162,6 +164,41 @@
       );
     };
 
+    userCamFunc = () => {
+      // open native camera app facing the environment
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.capture = "environment";
+      input.style.display = "none";
+      document.body.appendChild(input);
+      input.click();
+      
+      // save the image to the canvas
+      input.addEventListener("change", (e) => {
+        // @ts-ignore
+        if (!e.target || !e.target.files || !e.target.files[0]) return;
+        // @ts-ignore
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (!e.target || !e.target.result) return;
+          const img = new Image();
+          img.onload = () => {
+            if (!canvas || !canvasElement) return;
+            canvasElement.width = img.width;
+            canvasElement.height = img.height;
+            canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            canvas.drawImage(img, 0, 0, canvasElement.width, canvasElement.height);
+            captured = true;
+          };
+          // @ts-ignore
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    };
+
     videoElement.setAttribute("playsinline", "");
     videoElement.setAttribute("muted", "");
     videoElement.setAttribute("autoplay", "");
@@ -179,8 +216,6 @@
 
     videoElement.addEventListener("loadedmetadata", () => {
       if (!canvasElement || !videoElement) return;
-      canvasElement.width = videoElement.videoWidth;
-      canvasElement.height = videoElement.videoHeight;
       videoElement.width = videoElement.videoWidth;
       videoElement.height = videoElement.videoHeight;
       videoElement.play();
@@ -240,9 +275,11 @@
 
   <div class="grid">
     {#if uploading}
+      <button disabled><Camera /></button>
       <button disabled><CameraIris /></button>
       <button disabled aria-busy="true" />
     {:else}
+      <button on:click={userCamFunc}><Camera /></button>
       <button on:click={captureFunc}><CameraIris /></button>
       <button on:click={uploadFunc}><Upload /></button>
     {/if}
