@@ -114,7 +114,7 @@
 <div id="camera-container">
   <div class="grid">
     <canvas id="canvas" bind:this={canvasElement} />
-    <video id="video" autoplay bind:this={videoElement}>
+    <video id="video" autoplay muted playsinline bind:this={videoElement}>
       <track kind="captions" />
     </video>
   </div>
