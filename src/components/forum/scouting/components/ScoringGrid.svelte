@@ -8,7 +8,7 @@
   let value = startValue ? startValue.split(",").map((/** @type {string} */ v) => parseInt(v)) : [];
 
   const { field, onInput } = createField(name);
-  const imageUrl = "%sveltekit.assets%/images/scoring.png";
+  const imageUrl = "/images/scoring.png";
 
   /**
    * @type {HTMLCanvasElement | null}
