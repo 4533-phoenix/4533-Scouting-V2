@@ -30,7 +30,6 @@
   let uploadFunc = () => {};
   let userCamFunc = () => {};
 
-  let teams = [4533, 342];
   let captured = false;
   let uploading = false;
   let uploadingProgress = 0;
