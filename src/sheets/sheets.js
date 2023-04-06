@@ -14,7 +14,7 @@ async function authorize() {
   auth.authorize((err) => {
     if (err) {
       console.error(err);
-      return;
+      return null;
     }
   });
 
