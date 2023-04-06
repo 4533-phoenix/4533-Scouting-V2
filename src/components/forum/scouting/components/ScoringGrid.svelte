@@ -1,33 +1,43 @@
 <script>
-  // @ts-nocheck
   import { createField } from "felte";
   import { onMount } from "svelte";
 
   export let name;
   export let startValue;
 
-  let value;
-  if (startValue) {
-    value = startValue.split(",").map((v) => parseInt(v));
-  } else {
-    value = [];
-  }
+  let value = startValue ? startValue.split(",").map((/** @type {string} */ v) => parseInt(v)) : [];
 
   const { field, onInput } = createField(name);
   const imageUrl = "/images/scoring.png";
 
+  /**
+   * @type {HTMLCanvasElement | null}
+   */
   let canvasElement = null;
   let gridColumns = 9;
   let gridRows = 4;
 
+  /**
+   * @param {number} gridX
+   * @param {number} gridY
+   */
   function gridPosToIndex(gridX, gridY) {
     return gridY * gridColumns + gridX;
   }
 
+  /**
+   * @param {number} gridX
+   * @param {number} gridY
+   */
   function isEnabled(gridX, gridY) {
     return value.includes(gridPosToIndex(gridX, gridY));
   }
 
+  /**
+   * @param {number} gridX
+   * @param {number} gridY
+   * @param {boolean} enabled
+   */
   function setGrid(gridX, gridY, enabled) {
     const index = gridPosToIndex(gridX, gridY);
     if (enabled) {
@@ -35,7 +45,7 @@
         value.push(index);
       }
     } else {
-      value = value.filter((i) => i !== index);
+      value = value.filter((/** @type {number} */ i) => i !== index);
     }
   }
 
@@ -45,6 +55,7 @@
     const canvas = canvasElement.getContext("2d");
     const image = new Image();
     image.addEventListener("load", () => {
+      if (!canvasElement) return;
       // set the canvas width and height to the image width and height
       canvasElement.width = image.width;
       canvasElement.height = image.height;
@@ -71,9 +82,9 @@
       function animate() {
         // request the next animation frame
         requestAnimationFrame(animate);
-        
+
         // clear the canvas
-        if (!canvasElement) return;
+        if (!canvasElement || !canvas) return;
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
         // draw the image to the canvas
@@ -98,6 +109,9 @@
 
       // add the click event listener
       canvasElement.addEventListener("click", (event) => {
+        // check for canvas element
+        if (!canvasElement) return;
+
         // make the grid in canvas coordinates, not screen coordinates
         const rect = canvasElement.getBoundingClientRect();
         const windowX = event.clientX - rect.left;

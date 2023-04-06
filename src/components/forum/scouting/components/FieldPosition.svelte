@@ -1,5 +1,4 @@
 <script>
-  // @ts-nocheck
   import { browser } from "$app/environment";
   import { createField } from "felte";
   import { onMount } from "svelte";
@@ -8,16 +7,14 @@
   export let startValue;
   export let name;
 
-  let value;
-  if (startValue) {
-    value = startValue.split(",").map((v) => parseInt(v));
-  } else {
-    value = null;
-  }
+  let value = startValue ? startValue.split(",").map((/** @type {string} */ v) => parseInt(v)) : null;
 
   const { field, onInput } = createField(name);
   const imageUrl = "/images/field.png";
 
+  /**
+   * @type {HTMLCanvasElement | null}
+   */
   let canvasElement = null;
 
   onMount(() => {
@@ -26,6 +23,7 @@
     const canvas = canvasElement.getContext("2d");
     const image = new Image();
     image.addEventListener("load", () => {
+      if (!canvasElement) return;
       // set the canvas width and height to the image width and height
       canvasElement.width = image.width;
       canvasElement.height = image.height;
@@ -51,7 +49,7 @@
         requestAnimationFrame(animate);
 
         // clear the canvas
-        if (!canvasElement) return;
+        if (!canvasElement || !canvas) return;
         canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
         // draw the image to the canvas rotate it 180 degrees if flipped
@@ -74,6 +72,9 @@
 
       // add the click event listener
       canvasElement.addEventListener("click", (event) => {
+        // check for canvas element
+        if (!canvasElement) return;
+
         const rect = canvasElement.getBoundingClientRect();
         const windowX = event.clientX - rect.left;
         const windowY = event.clientY - rect.top;
@@ -113,7 +114,7 @@
     }
 
     // flip the value
-    if (value) {
+    if (value && canvasElement) {
       value = [canvasElement.width - value[0], canvasElement.height - value[1]];
     }
   }
