@@ -186,8 +186,10 @@
           const img = new Image();
           img.onload = () => {
             if (!canvas || !canvasElement) return;
-            canvasElement.width = img.width;
-            canvasElement.height = img.height;
+            // scale down image so long side is 640px
+            const scale = Math.min(640 / img.width, 640 / img.height);
+            canvasElement.width = img.width * scale;
+            canvasElement.height = img.height * scale;
             canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
             canvas.drawImage(img, 0, 0, canvasElement.width, canvasElement.height);
             captured = true;
