@@ -1,0 +1,21 @@
+                                                               
+                                                               
+#  FFFFFFFFFFFFFFFFFFFFFFRRRRRRRRRRRRRRRRR           CCCCCCCCCCCCC
+#  F::::::::::::::::::::FR::::::::::::::::R       CCC::::::::::::C
+#  F::::::::::::::::::::FR::::::RRRRRR:::::R    CC:::::::::::::::C
+#  FF::::::FFFFFFFFF::::FRR:::::R     R:::::R  C:::::CCCCCCCC::::C
+#    F:::::F       FFFFFF  R::::R     R:::::R C:::::C       CCCCCC
+#    F:::::F               R::::R     R:::::RC:::::C              
+#    F::::::FFFFFFFFFF     R::::RRRRRR:::::R C:::::C              
+#    F:::::::::::::::F     R:::::::::::::RR  C:::::C              
+#    F:::::::::::::::F     R::::RRRRRR:::::R C:::::C              
+#    F::::::FFFFFFFFFF     R::::R     R:::::RC:::::C              
+#    F:::::F               R::::R     R:::::RC:::::C              
+#    F:::::F               R::::R     R:::::R C:::::C       CCCCCC
+#  FF:::::::FF           RR:::::R     R:::::R  C:::::CCCCCCCC::::C
+#  F::::::::FF           R::::::R     R:::::R   CC:::::::::::::::C
+#  F::::::::FF           R::::::R     R:::::R     CCC::::::::::::C
+#  FFFFFFFFFFF           RRRRRRRR     RRRRRRR        CCCCCCCCCCCCC
+
+User-Agent: *
+Disallow: /
