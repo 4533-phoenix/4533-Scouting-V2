@@ -1,24 +1,20 @@
 import fs from "fs/promises";
 import path from "path";
-import { authenticate } from "@google-cloud/local-auth";
 import { google } from "googleapis";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import privatekey from "./privatekey.json";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
-const PRIVATEKEY_PATH = path.join(__dirname, "privatekey.json");
 
 async function authorize() {
-  const privateKeyRawData = await fs.readFile(PRIVATEKEY_PATH, "utf8");
-  const privateKeyData = JSON.parse(privateKeyRawData);
-
   const auth = new google.auth.JWT(
-    privateKeyData.client_email,
+    privatekey.client_email,
     undefined,
-    privateKeyData.private_key,
+    privatekey.private_key,
     SCOPES
   )
 
