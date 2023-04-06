@@ -24,6 +24,13 @@
 
   let captured = false;
 
+      const constraints = {
+      video: {
+        facingMode: "environment"
+      },
+      audio: false
+    };
+
   onMount(() => {
     if (!canvasElement) return;
 
@@ -38,18 +45,13 @@
 
     const canvas = canvasElement.getContext("2d");
 
-    const constraints = {
-      video: {
-        facingMode: "environment",
-        width: {exact: 640},
-        height: {exact: 480}
-      },
-      audio: false
-    };
-
     captureFunc = () => {
-      if (!canvas || !videoElement) return;
-      canvas.drawImage(videoElement, 0, 0, 640, 480);
+      if (!canvas || !videoElement || !canvasElement) return;
+      const width = canvasElement.width;
+      const height = canvasElement.height;
+
+      // draw the video at that frame
+      canvas.drawImage(videoElement, 0, 0, width, height);
       captured = true;
     };
 
@@ -85,6 +87,10 @@
       .then((stream) => {
         if (!videoElement) return;
         videoElement.srcObject = stream;
+        
+        if (!canvasElement) return;
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
       })
       .catch((e) => {
         console.log(e);
@@ -100,8 +106,8 @@
 
 <div id="camera-container">
   <div class="grid">
-    <canvas id="canvas" width="640" height="480" bind:this={canvasElement} />
-    <video id="video" width="100%" autoplay bind:this={videoElement}>
+    <canvas id="canvas" bind:this={canvasElement} />
+    <video id="video" autoplay bind:this={videoElement}>
       <track kind="captions" />
     </video>
   </div>
@@ -122,6 +128,11 @@
 
 <style>
   #camera-container canvas#canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  #camera-container video#video {
     width: 100%;
     height: 100%;
   }
