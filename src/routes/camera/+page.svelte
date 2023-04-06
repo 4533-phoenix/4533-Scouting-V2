@@ -102,7 +102,12 @@
       .getUserMedia(constraints)
       .then((stream) => {
         if (!videoElement) return;
-        videoElement.srcObject = stream;
+        if ("srcObject" in videoElement) {
+          videoElement.srcObject = stream;
+        } else {
+          // @ts-ignore
+          videoElement.src = window.URL.createObjectURL(stream);
+        }
 
         if (!canvasElement) return;
         const streamSettings = stream.getVideoTracks()[0].getSettings();
@@ -118,8 +123,14 @@
 
   onDestroy(() => {
     if (!videoElement) return;
-    // @ts-ignore
-    videoElement.srcObject.getTracks().forEach((track) => track.stop());
+
+    if (videoElement.srcObject) {
+      // @ts-ignore
+      videoElement.srcObject.getTracks().forEach((track) => track.stop());
+    } else {
+      // @ts-ignore
+      videoElement.src = null;
+    }
   });
 </script>
 
