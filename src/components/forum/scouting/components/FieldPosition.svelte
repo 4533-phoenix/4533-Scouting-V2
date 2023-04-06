@@ -88,8 +88,13 @@
         // set the value to canvas coordinates
         value = [canvasX, canvasY];
 
+        // update the input with corrected coordinates if flipped
+        const save_value = flipped
+          ? [canvasElement.width - value[0], canvasElement.height - value[1]]
+          : value;
+
         // update the input
-        onInput(value);
+        onInput(save_value);
       });
 
       // start the animation

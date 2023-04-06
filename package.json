@@ -1,7 +1,7 @@
 {
 	"name": "4533-scouting-v2",
-	"version": "0.0.1",
-	"private": true,
+	"version": "1.0.1",
+	"private": false,
 	"scripts": {
 		"dev": "vite dev",
 		"public": "vite dev --host",
