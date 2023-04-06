@@ -1,6 +1,9 @@
 <script>
     import ImageKit from "imagekit-javascript";
     import { onMount, onDestroy } from "svelte";
+    import CameraFlip from "svelte-material-icons/CameraFlip.svelte";
+    import CameraIris from "svelte-material-icons/CameraIris.svelte";
+    import Upload from "svelte-material-icons/Upload.svelte";
 
     /**
    * @type {HTMLCanvasElement | null}
@@ -19,6 +22,7 @@
 
     let captureFunc = () => {};
     let uploadFunc = () => {};
+    let flipFunc = () => {};
 
     let captured = false;
 
@@ -32,7 +36,6 @@
         });  
 
         const canvas = canvasElement.getContext("2d");
-        const video = document.getElementById("video");
 
         const constraints = {
             video: true,
@@ -43,9 +46,8 @@
         };
 
         captureFunc = () => {
-            if (!canvas || !video) return;
-            // @ts-ignore
-            canvas.drawImage(video, 0, 0, 640, 480);
+            if (!canvas || !videoElement) return;
+            canvas.drawImage(videoElement, 0, 0, 640, 480);
             captured = true;
         }
 
@@ -73,11 +75,32 @@
             });
         }
 
+        flipFunc = async () => {
+            if (!videoElement) return;
+            const stream = videoElement.srcObject;
+            // @ts-ignore
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track.getCapabilities();
+            const settings = track.getSettings();
+
+            if (!capabilities || !settings) return;
+
+            if (capabilities.facingMode && settings.facingMode) {
+                let newFacingMode = "user";
+                if (settings.facingMode === "user") {
+                    newFacingMode = "environment";
+                }
+
+                track.applyConstraints({
+                    advanced: [{ facingMode: newFacingMode }]
+                });
+            }
+        }
+
         navigator.mediaDevices.getUserMedia(constraints)
             .then((stream) => {
-                if (!video) return;
-                // @ts-ignore
-                video.srcObject = stream;
+                if (!videoElement) return;
+                videoElement.srcObject = stream;
             })
             .catch((err) => {
                 console.log(err);
@@ -85,10 +108,11 @@
     });
 
     onDestroy(() => {
-        console.log("destroyed");
-        if (!video) return;
+        if (!videoElement) return;
         // @ts-ignore
-        video.srcObject.getTracks().forEach((/** @type {{ stop: () => any; }} */ track) => track.stop());
+        videoElement.srcObject.getTracks().forEach((/** @type {{ stop: () => void; }} */ track) => {
+            track.stop();
+        });
     });
 </script>
 
@@ -103,9 +127,10 @@
     <br />
 
     <div class="grid">
-        <input name="teamNumber" placeholder="Team Number" type="tel" pattern="[0-9]*" required bind:this={teamNumberElement} />
-        <button id="capture" on:click={captureFunc}>Capture</button>
-        <button id="upload" on:click={uploadFunc}>Upload</button>
+        <input placeholder="Team Number" type="tel" pattern="[0-9]*" bind:this={teamNumberElement} />
+        <button on:click={captureFunc}><CameraIris /></button>
+        <button on:click={uploadFunc}><Upload /></button>
+        <button on:click={flipFunc}><CameraFlip /></button>
     </div>
 </div>
 
