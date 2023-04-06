@@ -9,55 +9,27 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
-const TOKEN_PATH = path.join(__dirname, "token.json");
-const CREDENTIALS_PATH = path.join(__dirname, "credentials.json");
-
-async function loadSavedCredentialsIfExist() {
-  try {
-    const content = await fs.readFile(TOKEN_PATH);
-    const credentials = JSON.parse(content.toString());
-    return google.auth.fromJSON(credentials);
-  } catch (err) {
-    return null;
-  }
-}
-
-
-/**
- * @param {import("googleapis-common").OAuth2Client} client
- */
-async function saveCredentials(client) {
-  const content = await fs.readFile(CREDENTIALS_PATH);
-  const keys = JSON.parse(content.toString());
-  const key = keys.installed || keys.web;
-  const payload = JSON.stringify({
-    type: "authorized_user",
-    client_id: key.client_id,
-    client_secret: key.client_secret,
-    refresh_token: client.credentials.refresh_token,
-  });
-  await fs.writeFile(TOKEN_PATH, payload);
-}
+const PRIVATEKEY_PATH = path.join(__dirname, "privatekey.json");
 
 async function authorize() {
-  const client = await loadSavedCredentialsIfExist();
+  const privateKeyRawData = await fs.readFile(PRIVATEKEY_PATH, "utf8");
+  const privateKeyData = JSON.parse(privateKeyRawData);
 
-  // check if it is expired
-  if (client && client.credentials) {
-    const expiryDate = new Date(client.credentials.expiry_date || 0);
-    if (expiryDate < new Date()) {
-      return client;
+  const auth = new google.auth.JWT(
+    privateKeyData.client_email,
+    undefined,
+    privateKeyData.private_key,
+    SCOPES
+  )
+
+  auth.authorize((err) => {
+    if (err) {
+      console.error(err);
+      return;
     }
-  }
-
-  const new_client = await authenticate({
-    scopes: SCOPES,
-    keyfilePath: CREDENTIALS_PATH
   });
-  if (new_client && new_client.credentials) {
-    await saveCredentials(new_client);
-  }
-  return new_client;
+
+  return auth;
 }
 
 // append data to a sheet using an array of values
