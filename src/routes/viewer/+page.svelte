@@ -9,8 +9,7 @@
     onMount(async () => {
         fetch("/api/getScoutingData").then((res) => {
             res.json().then((data) => {
-                scoutingData = data.data.values;
-                console.log(scoutingData);
+                scoutingData = data.values;
             });
         });
     });
