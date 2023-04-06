@@ -45,14 +45,14 @@ async function authorize() {
   // check if it is expired
   if (client && client.credentials) {
     const expiryDate = new Date(client.credentials.expiry_date || 0);
-    if (expiryDate > new Date()) {
+    if (expiryDate < new Date()) {
       return client;
     }
   }
 
   const new_client = await authenticate({
     scopes: SCOPES,
-    keyfilePath: CREDENTIALS_PATH,
+    keyfilePath: CREDENTIALS_PATH
   });
   if (new_client && new_client.credentials) {
     await saveCredentials(new_client);
