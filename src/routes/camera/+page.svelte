@@ -31,7 +31,7 @@
     video: {
       facingMode: "environment",
     },
-    audio: false,
+    audio: false
   };
 
   onMount(async () => {
@@ -106,31 +106,28 @@
       }, "image/png");
     };
 
+    videoElement.setAttribute("playsinline", "");
+    videoElement.setAttribute("muted", "");
+    videoElement.setAttribute("autoplay", "");
+
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
         if (!videoElement) return;
         videoElement.srcObject = stream;
-        
-        // set videoElement width and height to match stream
-        const videoSettings = stream.getVideoTracks()[0].getSettings();
-        videoElement.width = videoSettings.width || 0;
-        videoElement.height = videoSettings.height || 0;
-        videoElement.setAttribute("playsinline", "");
-        videoElement.setAttribute("muted", "");
-        videoElement.setAttribute("autoplay", "");
-
-        // set canvasElement width and height to match stream
-        if (!canvasElement) return;
-        canvasElement.width = videoSettings.width || 0;
-        canvasElement.height = videoSettings.height || 0;
-
-        // play video
-        videoElement.play();
       })
       .catch((err) => {
         console.error(err);
         alert("Error getting camera. Please try again.");
+      });
+
+      videoElement.addEventListener("loadedmetadata", () => {
+        if (!canvasElement || !videoElement) return;
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
+        videoElement.width = videoElement.videoWidth;
+        videoElement.height = videoElement.videoHeight;
+        videoElement.play();
       });
   });
 
@@ -144,7 +141,7 @@
 <div id="camera-container">
   <div class="grid">
     <canvas id="canvas" bind:this={canvasElement} />
-    <video id="video" width="100%" autoplay muted playsinline bind:this={videoElement}>
+    <video id="video" width="100%" muted playsinline autoplay bind:this={videoElement}>
       <track kind="captions" />
     </video>
   </div>
