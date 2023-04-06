@@ -16,13 +16,20 @@
   let videoElement = null;
 
   /**
-   * @type {HTMLInputElement | null}
+   * @type {HTMLDivElement | null}
    */
-  let teamNumberElement = null;
+  let teamTagsElement = null;
+
+  /**
+   * @type {HTMLDivElement | null}
+   */
+  let photoTypesElement = null;
 
   let captureFunc = () => {};
   let uploadFunc = () => {};
 
+
+  let teams = [4533, 342];
   let captured = false;
   let uploading = false;
   let uploadingProgress = 0;
@@ -30,12 +37,13 @@
   const constraints = {
     video: {
       facingMode: "environment",
+      focusMode: {ideal: "continuous"}
     },
-    audio: false
+    audio: false,
   };
 
   onMount(async () => {
-    if (!canvasElement || !videoElement) return;
+    if (!canvasElement || !videoElement || !teamTagsElement) return;
 
     const imagekitInstance = new imagekit({
       publicKey: "public_U4CHFaY7n92f0a73kpdWBaxgl60=",
@@ -58,52 +66,100 @@
       captured = true;
     };
 
+    function getTeams() {
+      if (!teamTagsElement) return;
+
+      // return all childrens values in an array if it is an input and has a value
+      return Array.from(teamTagsElement.children)
+        .filter((child) => child instanceof HTMLInputElement && child.value)
+        // @ts-ignore
+        .map((child) => child.value);
+    }
+
+    function getCheckboxes() {
+      if (!photoTypesElement) return;
+
+      // return array of all checked checkboxes name children of photoTypesElement
+      return Array.from(photoTypesElement.children)
+        .filter((child) => child instanceof HTMLDivElement)
+        .map((child) => Array.from(child.children))
+        .flat()
+        .filter((child) => child instanceof HTMLInputElement && child.checked)
+        // @ts-ignore
+        .map((child) => child.name);
+    }
+
     uploadFunc = () => {
-      if (!canvasElement || !captured || uploading)
-        return;
+      if (!canvasElement || !captured || uploading) return;
 
       uploadingProgress = 0;
       uploading = true;
-      const file = canvasElement.toBlob((file) => {
-        if (!file) {
-          uploading = false;
-          alert("Error uploading image. Please try again.");
-          return;
-        };
-
-        if (!teamNumberElement) return;
-
-        const teamNumber = teamNumberElement.value;
-        const dateString = new Date().toISOString().split("T")[0];
-        const timeString = new Date().toISOString().split("T")[1].split(".")[0];
-
-        const customXHR = new XMLHttpRequest();
-        customXHR.upload.addEventListener("progress", function (e) {
-          if (e.loaded <= file.size) {
-            uploadingProgress = Math.round((e.loaded / file.size) * 100);
-          }
-        });
-
-        imagekitInstance
-          .upload({
-            file: file,
-            fileName: `${teamNumber}-${dateString}-${timeString}.png`,
-            folder: "scouting",
-            tags: [teamNumber, dateString],
-            xhr: customXHR,
-          })
-          .then(() => {
-            uploading = false;
-            captured = false;
-
-            if (!canvas || !canvasElement) return;
-            canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
-          })
-          .catch(() => {
+      const file = canvasElement.toBlob(
+        (file) => {
+          if (!file) {
             uploading = false;
             alert("Error uploading image. Please try again.");
+            return;
+          }
+
+          const teamNumbers = getTeams() || [];
+          const photoTypes = getCheckboxes() || [];
+          const dateString = new Date().toISOString().split("T")[0];
+          const timeString = new Date()
+            .toISOString()
+            .split("T")[1]
+            .split(".")[0];
+
+          const customXHR = new XMLHttpRequest();
+          customXHR.upload.addEventListener("progress", function (e) {
+            if (e.loaded <= file.size) {
+              uploadingProgress = Math.round((e.loaded / file.size) * 100);
+            }
           });
-      }, "image/png");
+
+          imagekitInstance
+            .upload({
+              file: file,
+              fileName: `${(teamNumbers || [0]).join("-")}-${dateString}-${timeString}.png`,
+              folder: "scouting",
+              tags: [...teamNumbers, ...photoTypes, dateString],
+              xhr: customXHR,
+            })
+            .then(() => {
+              uploading = false;
+              captured = false;
+
+              if (!canvas || !canvasElement) return;
+              canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+              // clear all team tags except the first one
+              if (!teamTagsElement) return;
+              const firstChild = teamTagsElement.children[0];
+              // @ts-ignore
+              firstChild.value = "";
+              if (firstChild) {
+                teamTagsElement.innerHTML = "";
+                teamTagsElement.appendChild(firstChild);
+              }
+
+              // uncheck all checkboxes
+              if (!photoTypesElement) return;
+              Array.from(photoTypesElement.children)
+                .filter((child) => child instanceof HTMLDivElement)
+                .map((child) => Array.from(child.children))
+                .flat()
+                .filter((child) => child instanceof HTMLInputElement)
+                // @ts-ignore
+                .forEach((child) => (child.checked = false));
+            })
+            .catch(() => {
+              uploading = false;
+              alert("Error uploading image. Please try again.");
+            });
+        },
+        "image/png",
+        1
+      );
     };
 
     videoElement.setAttribute("playsinline", "");
@@ -121,14 +177,41 @@
         alert("Error getting camera. Please try again.");
       });
 
-      videoElement.addEventListener("loadedmetadata", () => {
-        if (!canvasElement || !videoElement) return;
-        canvasElement.width = videoElement.videoWidth;
-        canvasElement.height = videoElement.videoHeight;
-        videoElement.width = videoElement.videoWidth;
-        videoElement.height = videoElement.videoHeight;
-        videoElement.play();
-      });
+    videoElement.addEventListener("loadedmetadata", () => {
+      if (!canvasElement || !videoElement) return;
+      canvasElement.width = videoElement.videoWidth;
+      canvasElement.height = videoElement.videoHeight;
+      videoElement.width = videoElement.videoWidth;
+      videoElement.height = videoElement.videoHeight;
+      videoElement.play();
+    });
+
+    /**
+     * @param {HTMLInputElement} element
+     */
+    function teamChange(element) {
+      if (!element) return;
+      const value = element.value;
+      if (!value) {
+        element.remove();
+      } else {
+        if (!teamTagsElement || element.nextElementSibling) return;
+
+        const newNode = element.cloneNode(true);
+        const newElement = /** @type {HTMLInputElement} */ (newNode);
+        newElement.oninput = () => teamChange(newElement);
+        newElement.value = "";
+        teamTagsElement.appendChild(newElement);
+      }
+    }
+
+    const teamTagElement = document.createElement("input");
+    teamTagElement.placeholder = "Team Number";
+    teamTagElement.type = "tel";
+    teamTagElement.pattern = "[0-9]*";
+    teamTagElement.onchange = () => teamChange(teamTagElement);
+    teamTagElement.oninput = () => teamChange(teamTagElement);
+    teamTagsElement.appendChild(teamTagElement);
   });
 
   onDestroy(() => {
@@ -141,7 +224,14 @@
 <div id="camera-container">
   <div class="grid">
     <canvas id="canvas" bind:this={canvasElement} />
-    <video id="video" width="100%" muted playsinline autoplay bind:this={videoElement}>
+    <video
+      id="video"
+      width="100%"
+      muted
+      playsinline
+      autoplay
+      bind:this={videoElement}
+    >
       <track kind="captions" />
     </video>
   </div>
@@ -149,13 +239,6 @@
   <br />
 
   <div class="grid">
-    <input
-      placeholder="Team Number"
-      type="tel"
-      pattern="[0-9]*"
-      bind:this={teamNumberElement}
-    />
-
     {#if uploading}
       <button disabled><CameraIris /></button>
       <button disabled aria-busy="true" />
@@ -164,6 +247,34 @@
       <button on:click={uploadFunc}><Upload /></button>
     {/if}
   </div>
+
+  <!-- for team in team add one more that is blank that gets added and deleted -->
+  <!-- loop for one more than the len of teams -->
+  <!-- if teams.length > 0 then teams else [0] -->
+  <div bind:this={teamTagsElement}></div>
+  <div class="grid" bind:this={photoTypesElement}>
+    <div>
+      <input type="checkbox" name="pit" value="Pit" />
+      <label for="pit">Pit</label>
+    </div>
+
+    <div>
+      <input type="checkbox" name="robot" value="Robot" />
+      <label for="robot">Robot</label>
+    </div>
+
+    <div>
+      <input type="checkbox" name="team" value="Team" />
+      <label for="team">Team</label>
+    </div>
+
+    <div>
+      <input type="checkbox" name="match" value="Match" />
+      <label for="match">Match</label>
+    </div>
+  </div>
+
+  <br />
 
   {#if uploading}
     <progress value={uploadingProgress} max="100" />
