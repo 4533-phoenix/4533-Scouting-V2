@@ -1,4 +1,6 @@
+import imagekit from "imagekit";
 import sheets from "./sheets/sheets.js";
+import imagekitAuth from "./images/images.js";
 
 const API_PATH = "/api";
 const SHEET_ID = "1PtLAnE08BrOswCFf4YPJqEgperZDTK-x_GDP74c1M0Y";
@@ -66,6 +68,17 @@ const apiRoutes = [
 
             return {
                 "response": { "status": "OK", "values": data.data.values },
+                "code": 200,
+            };
+        }
+    },
+    // image kit auth
+    {
+        method: "GET",
+        path: "/imagekitAuth",
+        handler: async () => {
+            return {
+                "response": imagekitAuth.getAuthenticationParameters(),
                 "code": 200,
             };
         }

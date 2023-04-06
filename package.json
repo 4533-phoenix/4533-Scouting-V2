@@ -18,6 +18,7 @@
 		"@sveltejs/kit": "^1.5.0",
 		"@types/node": "^18.15.11",
 		"felte": "^1.2.7",
+		"imagekit-javascript": "^1.5.5",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"svelte-material-icons": "^2.0.4",
@@ -27,6 +28,7 @@
 	"type": "module",
 	"dependencies": {
 		"google-spreadsheet": "^3.3.0",
-		"googleapis": "^105.0.0"
+		"googleapis": "^105.0.0",
+		"imagekit": "^4.1.3"
 	}
 }
