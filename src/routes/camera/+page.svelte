@@ -89,8 +89,11 @@
         videoElement.srcObject = stream;
         
         if (!canvasElement) return;
-        canvasElement.width = videoElement.videoWidth;
-        canvasElement.height = videoElement.videoHeight;
+        const streamSettings = stream.getVideoTracks()[0].getSettings();
+        const streamHeight = streamSettings.height || 0;
+        const streamWidth = streamSettings.width || 0;
+        canvasElement.width = streamWidth;
+        canvasElement.height = streamHeight;
       })
       .catch((e) => {
         console.log(e);
