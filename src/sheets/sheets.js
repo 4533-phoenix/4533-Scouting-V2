@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
-import {authenticate} from "@google-cloud/local-auth";
-import {google} from "googleapis";
+import { authenticate } from "@google-cloud/local-auth";
+import { google } from "googleapis";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -41,8 +41,13 @@ async function saveCredentials(client) {
 
 async function authorize() {
   const client = await loadSavedCredentialsIfExist();
-  if (client) {
-    return client;
+
+  // check if it is expired
+  if (client && client.credentials) {
+    const expiryDate = new Date(client.credentials.expiry_date || 0);
+    if (expiryDate > new Date()) {
+      return client;
+    }
   }
 
   const new_client = await authenticate({
@@ -63,18 +68,22 @@ async function authorize() {
  * @param {string} sheet
  */
 async function appendData(auth, data, sheetId, sheet) {
-  const sheets = google.sheets({version: "v4", auth});
-  // @ts-ignore
-  const res = sheets.spreadsheets.values.append({
-    spreadsheetId: sheetId,
-    range: `${sheet}!A1`,
-    valueInputOption: "USER_ENTERED",
-    insertDataOption: "INSERT_ROWS",
-    resource: {
-      values: [data],
-    },
-  });
-  return res;
+  const sheets = google.sheets({ version: "v4", auth });
+  try {
+    // @ts-ignore
+    const res = sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: `${sheet}!A1`,
+      valueInputOption: "USER_ENTERED",
+      insertDataOption: "INSERT_ROWS",
+      resource: {
+        values: [data],
+      },
+    });
+  } catch (err) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -83,7 +92,7 @@ async function appendData(auth, data, sheetId, sheet) {
  * @param {string} sheet
  */
 async function getAllData(auth, sheetId, sheet) {
-  const sheets = google.sheets({version: "v4", auth});
+  const sheets = google.sheets({ version: "v4", auth });
   const res = sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
     range: `${sheet}!A1:AC`,

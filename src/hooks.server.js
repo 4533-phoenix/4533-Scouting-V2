@@ -1,7 +1,7 @@
 import sheets from "./sheets/sheets.js";
 
 const API_PATH = "/api";
-const SHEET_ID = "1du2nhcwpTCuFTysOjCrpxhoGi95i9u6V_YX2d1SU8pU";
+const SHEET_ID = "1PtLAnE08BrOswCFf4YPJqEgperZDTK-x_GDP74c1M0Y";
 
 /**
  * @type {import("googleapis-common").BaseExternalAccountClient | import("googleapis-common").OAuth2Client | null}
@@ -38,7 +38,7 @@ const apiRoutes = [
             
 
             const res = sheets.appendData(client, data, SHEET_ID, "Data");
-            if (res === null) {
+            if (!res) {
                 return {
                     "response": JSON.stringify({ "status": "ERROR" }),
                     "code": 500,
@@ -99,20 +99,15 @@ export async function handle({ event, resolve }) {
             const result = await route.handler(simplifiedEvent);
 
             return new Response(
-                JSON.stringify({
-                    status: result.code,
-                    message: "OK",
-                    data: result.response,
-                }),
+                JSON.stringify(result.response),
                 {
-                    status: 200,
+                    status: result.code,
                     headers: { "Content-Type": "application/json" },
                 }
             );
         } else {
             return new Response(
                 JSON.stringify({
-                    status: 404,
                     message: "Not Found",
                     data: null,
                 }),

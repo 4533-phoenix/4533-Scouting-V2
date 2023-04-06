@@ -7,24 +7,13 @@
   export let initialValues;
   export let onSubmit;
   export let onBack;
+  export let isSubmitting;
 
   let subformContainer = null;
 
   onMount(() => {
-    if (!subformContainer || !initialValues) return;
-
-    const inputs = subformContainer.querySelectorAll("input");
-
-    inputs.forEach((input) => {
-      input.value = initialValues[input.name];
-    });
-
-    const radios = subformContainer.querySelectorAll("input[type=radio]");
-    radios.forEach((radio) => {
-      if (radio.value === initialValues[radio.name]) {
-        radio.checked = true;
-      }
-    });
+    if (!initialValues) return;
+    data.set(initialValues);
   });
 
   const { form, data } = createForm({ onSubmit });
@@ -178,6 +167,15 @@
       />
       <label for="goodAlliance">Good Alliance</label>
     </div>
+    <div>
+      <input
+        type="checkbox"
+        name="isBroken"
+        id="isBroken"
+        value="Is Broken"
+      />
+      <label for="isBroken">Currently Broken</label>
+    </div>
   </div>
 
   <hr />
@@ -261,12 +259,13 @@
   <br /><br />
 
   <div class="grid">
-    <button
-      type="button"
-      class="contrast outline"
-      on:click={() => onBack($data)}>Previous page</button
-    >
-    <button type="submit">Submit</button>
+    {#if isSubmitting}
+    <button type="button" disabled>Previous page</button>
+      <button type="button" aria-busy="true" disabled>Submitting...</button>
+    {:else}
+      <button type="button" on:click={() => onBack($data)}>Previous page</button>
+      <button type="submit">Submit</button>
+    {/if}
   </div>
 </form>
 

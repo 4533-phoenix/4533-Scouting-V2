@@ -10,19 +10,24 @@
 
   const pages = [Prematch, Autonomous, Teleop, Endgame, Misc];
 
-  // The current page of our form.
+  // is submitting
+  let isSubmitting = false;
+
+  // the current page of our form.
   let page = 0;
 
-  // The state of all of our pages
+  // the state of all of our pages
   let pagesState = [];
 
   // anti charlie
   let antiCharlie = false;
 
-  // Our handlers
+  // our handlers
   function onSubmit(values) {
     if (page === pages.length - 1) {
-      // On our final page we POST our data somewhere
+      // set submitting to true
+      isSubmitting = true;
+      // on our final page we POST our data somewhere
       pagesState[page] = values;
       if (antiCharlie) return;
 
@@ -42,19 +47,20 @@
         body: JSON.stringify(pagesState),
       }).then((response) => {
         if (response.ok) {
-          // If we get a 200 response, we set our page to 0
+          // if we get a 200 response, we set our page to 0
           page = 0;
           pagesState = [];
         } else {
-          // If we get a non-200 response, we display an error message
+          // if we get a non-200 response, we display an error message
           alert("Error!");
         }
         antiCharlie = false;
+        isSubmitting = false;
       });
     } else {
-      // If we're not on the last page, store our data and increase a step
+      // if we're not on the last page, store our data and increase a step
       pagesState[page] = values;
-      pagesState = pagesState; // Triggering update
+      pagesState = pagesState; // triggering update
       page += 1;
     }
   }
@@ -62,15 +68,17 @@
   function onBack(values) {
     if (page === 0) return;
     pagesState[page] = values;
-    pagesState = pagesState; // Triggering update
+    pagesState = pagesState; // triggering update
     page -= 1;
   }
 </script>
 
 <!-- We display the current step here -->
+
 <svelte:component
   this={pages[page]}
-  {onSubmit}
-  {onBack}
+  onSubmit={onSubmit}
+  onBack={onBack}
   initialValues={pagesState[page]}
+  {isSubmitting}
 />
