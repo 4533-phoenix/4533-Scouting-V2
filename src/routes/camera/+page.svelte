@@ -23,6 +23,7 @@
   let uploadFunc = () => {};
 
   let captured = false;
+  let uploading = false;
 
       const constraints = {
       video: {
@@ -56,7 +57,8 @@
     };
 
     uploadFunc = async () => {
-      if (!canvasElement || !teamNumberElement || !captured) return;
+      if (!canvasElement || !teamNumberElement || !captured || uploading) return;
+      uploading = true;
       const data = canvasElement.toDataURL("image/png");
       const file = await (await fetch(data)).blob();
 
@@ -72,12 +74,14 @@
           tags: [teamNumber, dateString],
         })
         .then(() => {
+          uploading = false;
           captured = false;
 
           if (!canvas || !canvasElement) return;
           canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
         })
         .catch(() => {
+          uploading = false;
           alert("Error uploading image. Please try again.");
         });
     };
@@ -124,8 +128,14 @@
       pattern="[0-9]*"
       bind:this={teamNumberElement}
     />
-    <button on:click={captureFunc}><CameraIris /></button>
-    <button on:click={uploadFunc}><Upload /></button>
+    
+    {#if uploading}
+      <button disabled><CameraIris /></button>
+      <button disabled aria-busy="true"></button>
+    {:else}
+      <button on:click={captureFunc}><CameraIris /></button>
+      <button on:click={uploadFunc}><Upload /></button>
+    {/if}
   </div>
 </div>
 
