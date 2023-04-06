@@ -1,6 +1,7 @@
 <script>
-  import ImageKit from "imagekit-javascript";
+  import imagekit from "imagekit-javascript";
   import { onMount, onDestroy } from "svelte";
+
   import CameraIris from "svelte-material-icons/CameraIris.svelte";
   import Upload from "svelte-material-icons/Upload.svelte";
 
@@ -33,10 +34,10 @@
     audio: false,
   };
 
-  onMount(() => {
-    if (!canvasElement) return;
+  onMount(async () => {
+    if (!canvasElement || !videoElement) return;
 
-    const imagekit = new ImageKit({
+    const imagekitInstance = new imagekit({
       publicKey: "public_U4CHFaY7n92f0a73kpdWBaxgl60=",
       urlEndpoint: "https://ik.imagekit.io/bski6aprc",
       authenticationEndpoint: `${window.location.href.substring(
@@ -57,80 +58,74 @@
       captured = true;
     };
 
-    uploadFunc = async () => {
-      if (!canvasElement || !teamNumberElement || !captured || uploading)
+    uploadFunc = () => {
+      if (!canvasElement || !captured || uploading)
         return;
 
       uploadingProgress = 0;
       uploading = true;
-      const data = canvasElement.toDataURL("image/png");
-      const file = await (await fetch(data)).blob();
-
-      const teamNumber = teamNumberElement.value;
-      const dateString = new Date().toISOString().split("T")[0];
-      const timeString = new Date().toISOString().split("T")[1].split(".")[0];
-
-      const customXHR = new XMLHttpRequest();
-      customXHR.upload.addEventListener("progress", function (e) {
-        if (e.loaded <= file.size) {
-          uploadingProgress = Math.round((e.loaded / file.size) * 100);
-        }
-      });
-
-      imagekit
-        .upload({
-          file: file,
-          fileName: `${teamNumber}-${dateString}-${timeString}.png`,
-          folder: "scouting",
-          tags: [teamNumber, dateString],
-          xhr: customXHR,
-        })
-        .then(() => {
-          uploading = false;
-          captured = false;
-
-          if (!canvas || !canvasElement) return;
-          canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        })
-        .catch(() => {
+      const file = canvasElement.toBlob((file) => {
+        if (!file) {
           uploading = false;
           alert("Error uploading image. Please try again.");
+          return;
+        };
+
+        if (!teamNumberElement) return;
+
+        const teamNumber = teamNumberElement.value;
+        const dateString = new Date().toISOString().split("T")[0];
+        const timeString = new Date().toISOString().split("T")[1].split(".")[0];
+
+        const customXHR = new XMLHttpRequest();
+        customXHR.upload.addEventListener("progress", function (e) {
+          if (e.loaded <= file.size) {
+            uploadingProgress = Math.round((e.loaded / file.size) * 100);
+          }
         });
+
+        imagekitInstance
+          .upload({
+            file: file,
+            fileName: `${teamNumber}-${dateString}-${timeString}.png`,
+            folder: "scouting",
+            tags: [teamNumber, dateString],
+            xhr: customXHR,
+          })
+          .then(() => {
+            uploading = false;
+            captured = false;
+
+            if (!canvas || !canvasElement) return;
+            canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
+          })
+          .catch(() => {
+            uploading = false;
+            alert("Error uploading image. Please try again.");
+          });
+      }, "image/png");
     };
 
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then((stream) => {
-        if (!videoElement) return;
-        if ("srcObject" in videoElement) {
-          videoElement.srcObject = stream;
-        } else {
-          // @ts-ignore
-          videoElement.src = window.URL.createObjectURL(stream);
-        }
+    videoElement.addEventListener("loadedmetadata", () => {
+      if (!canvasElement || !videoElement) return;
+      canvasElement.width = videoElement.videoWidth;
+      canvasElement.height = videoElement.videoHeight;
+    });
 
-        if (!canvasElement) return;
-        const streamSettings = stream.getVideoTracks()[0].getSettings();
-        const streamHeight = streamSettings.height || 0;
-        const streamWidth = streamSettings.width || 0;
-        canvasElement.width = streamWidth;
-        canvasElement.height = streamHeight;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    videoElement.setAttribute("playsinline", "");
+    videoElement.setAttribute("autoplay", "");
+    videoElement.setAttribute("muted", "");
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    videoElement.srcObject = stream;
+
+    videoElement.play();
   });
 
   onDestroy(() => {
-    if (!videoElement) return;
-
-    if (videoElement.srcObject) {
-      // @ts-ignore
-      videoElement.srcObject.getTracks().forEach((track) => track.stop());
-    } else {
-      // @ts-ignore
-      videoElement.src = null;
-    }
+    if (!videoElement || !videoElement.srcObject) return;
+    // @ts-ignore
+    videoElement.srcObject.getTracks().forEach((track) => track.stop());
   });
 </script>
 
