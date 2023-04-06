@@ -1,7 +1,6 @@
 <script>
   import ImageKit from "imagekit-javascript";
   import { onMount, onDestroy } from "svelte";
-  import CameraFlip from "svelte-material-icons/CameraFlip.svelte";
   import CameraIris from "svelte-material-icons/CameraIris.svelte";
   import Upload from "svelte-material-icons/Upload.svelte";
 
@@ -22,7 +21,6 @@
 
   let captureFunc = () => {};
   let uploadFunc = () => {};
-  let flipFunc = () => {};
 
   let captured = false;
 
@@ -82,29 +80,6 @@
         });
     };
 
-    flipFunc = async () => {
-      if (!videoElement) return;
-
-      const facingMode = constraints.video.facingMode;
-
-      // get new mode
-      const newMode = facingMode === "user" ? "environment" : "user";
-
-      // update constraints
-      // @ts-ignore
-      constraints.video.facingMode = newMode;
-      console.log(constraints)
-      
-      navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream) => {
-          if (!videoElement) return;
-          videoElement.srcObject = stream;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
@@ -142,7 +117,6 @@
     />
     <button on:click={captureFunc}><CameraIris /></button>
     <button on:click={uploadFunc}><Upload /></button>
-    <button on:click={flipFunc}><CameraFlip /></button>
   </div>
 </div>
 
