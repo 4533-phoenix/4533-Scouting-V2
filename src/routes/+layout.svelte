@@ -1,6 +1,6 @@
 <script>
-  import Header from "../components/Header.svelte";
-  import Footer from "../components/Footer.svelte";
+  import Header from "$lib/Header.svelte";
+  import Footer from "$lib/Footer.svelte";
   import "@picocss/pico/css/pico.min.css";
 </script>
 

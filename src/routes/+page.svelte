@@ -1,5 +1,5 @@
 <script>
-  import ScoutingForum from "../components/forum/scouting/Forum.svelte";
+  import ScoutingForum from "$lib/forum/scouting/Forum.svelte";
 </script>
 
 <ScoutingForum />

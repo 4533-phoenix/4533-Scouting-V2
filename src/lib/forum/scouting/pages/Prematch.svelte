@@ -8,13 +8,18 @@
   export let initialValues;
   export let onSubmit;
 
+  let matchNumberInput;
+
   onMount(() => {
     if (!initialValues) return;
     data.set(initialValues);
   });
 
-  function autoUpper(event) {
+  function scouterInitialEvent(event) {
     event.target.value = event.target.value.toUpperCase();
+    if (event.target.value.length === 3) {
+      matchNumberInput.focus();
+    }
   }
 
   const { form, data } = createForm({ onSubmit });
@@ -35,10 +40,11 @@
       name="scouterInitials"
       placeholder="Scouter Initials"
       type="text"
-      maxlength="2"
+      maxlength="3"
+      minlength="3"
       required
-      on:input={autoUpper}
-      on:keypress={autoUpper}
+      on:input={scouterInitialEvent}
+      on:keypress={scouterInitialEvent}
     />
     <input
       name="matchNumber"
@@ -46,6 +52,7 @@
       type="tel"
       pattern="[0-9]*"
       novalidate
+      bind:this={matchNumberInput}
       required
     />
     <input
