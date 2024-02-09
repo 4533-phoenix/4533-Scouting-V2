@@ -20,14 +20,18 @@
 <h1>Autonomous</h1>
 
 <form use:form>
-  <ScoringGrid name="autoScoringGrid" startValue={initialValues ? initialValues["autoScoringGrid"] : null} />
-
-  <hr />
-
   <div class="grid">
     <input
-      name="gamePiecesAttempted"
-      placeholder="Game pieces attempted"
+      name="autoAmpNotes"
+      placeholder="Amp notes"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
+      required
+    />
+		<input
+      name="autoSpeakerNotes"
+      placeholder="Speaker notes"
       type="tel"
       pattern="[0-9]*"
       novalidate
@@ -39,59 +43,11 @@
 
   <div>
     <input
-      name="mobility"
+      name="autoLeave"
       type="checkbox"
-      id="mobility"
+      id="leave"
     />
-    <label for="mobility">Mobility</label>
-  </div>
-
-  <hr />
-
-  <div class="grid">
-    <label for="autoChargePosition">Charge Position:</label>
-
-    <div class="radio">
-      <input
-        type="radio"
-        name="autoChargePosition"
-        value="Docked"
-        id="docked"
-        required
-      />
-      <label for="docked">Docked</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="autoChargePosition"
-        value="Engaged"
-        id="engaged"
-        required
-      />
-      <label for="engaged">Engaged</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="autoChargePosition"
-        value="Attempted"
-        id="attempted"
-        required
-      />
-      <label for="attempted">Attempted</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="autoChargePosition"
-        value="None"
-        id="none"
-        required
-        checked
-      />
-      <label for="none">None</label>
-    </div>
+    <label for="leave">Leave</label>
   </div>
 
   <br />

@@ -20,112 +20,55 @@
 <h1>Teleop</h1>
 
 <form use:form>
-  <ScoringGrid
-    name="teleopScoringGrid"
-    startValue={initialValues ? initialValues["teleopScoringGrid"] : null}
-  />
+  <div class="grid">
+    <input
+      name="teleopAmpNotes"
+      placeholder="Amp notes"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
+      required
+    />
+		<input
+      name="teleopSpeakerNotes"
+      placeholder="Speaker notes"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
+      required
+    />
+		<input
+      name="teleopAmpSpeakerNotes"
+      placeholder="Amplified speaker notes"
+      type="tel"
+      pattern="[0-9]*"
+      novalidate
+      required
+    />
+  </div>
 
-  <hr />
+	<hr />
 
   <div class="grid">
     <div>
-      <input name="smartPlacement" type="checkbox" id="smartPlacement" />
-      <label for="smartPlacement">Smart placement</label>
+      <input name="teleopMelody" type="checkbox" id="teleopMelody" />
+      <label for="teleopMelody">Melody</label>
     </div>
-
     <div>
-      <input name="defended" type="checkbox" id="defended" />
-      <label for="defended">Defended</label>
+      <input name="teleopEnsemble" type="checkbox" id="teleopEnsemble" />
+      <label for="teleopEnsemble">Ensemble</label>
     </div>
-  </div>
-
-  <hr />
-
-  <div class="grid">
-    <label for="floorPickup">Floor Pickup:</label>
-
-    <div class="radio">
-      <input
-        type="radio"
-        name="floorPickup"
-        value="Cones"
-        id="cones"
-        required
-      />
-      <label for="cones">Cones</label>
+		<div>
+      <input name="teleopPark" type="checkbox" id="teleopPark" />
+      <label for="teleopPark">Park</label>
     </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="floorPickup"
-        value="Cubes"
-        id="cubes"
-        required
-      />
-      <label for="cubes">Cubes</label>
+		<div>
+      <input name="teleopOnstage" type="checkbox" id="teleopOnstage" />
+      <label for="teleopOnstage">Onstage</label>
     </div>
-    <div class="radio">
-      <input type="radio" name="floorPickup" value="Both" id="both" required />
-      <label for="both">Both</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="floorPickup"
-        value="None"
-        id="none"
-        required
-        checked
-      />
-      <label for="none">None</label>
-    </div>
-  </div>
-
-  <hr />
-
-  <div class="grid">
-    <label for="substationUse">Substation Use:</label>
-
-    <div class="radio">
-      <input
-        type="radio"
-        name="substationUse"
-        value="Single"
-        id="single"
-        required
-      />
-      <label for="single">Single</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="substationUse"
-        value="Double"
-        id="double"
-        required
-      />
-      <label for="double">Double</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="substationUse"
-        value="Both"
-        id="both"
-        required
-      />
-      <label for="both">Both</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="substationUse"
-        value="None"
-        id="none"
-        required
-        checked
-      />
-      <label for="none">None</label>
+		<div>
+      <input name="teleopSpotlit" type="checkbox" id="teleopSpotlit" />
+      <label for="teleopSpotlit">Spotlit</label>
     </div>
   </div>
 

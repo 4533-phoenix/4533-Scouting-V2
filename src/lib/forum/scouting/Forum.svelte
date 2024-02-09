@@ -20,6 +20,7 @@
   let pagesState = [];
 
   // anti charlie
+	// -- deals with spam
   let antiCharlie = false;
 
   // our handlers

@@ -19,84 +19,22 @@
 <h1>Endgame</h1>
 
 <form use:form>
-  <div class="grid">
-    <label for="finalChargePosition">Charge Position:</label>
-
-    <div class="radio">
-      <input
-        type="radio"
-        name="finalChargePosition"
-        value="Parked"
-        id="parked"
-        required
-      />
-      <label for="parked">Parked</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="finalChargePosition"
-        value="Docked"
-        id="docked"
-        required
-      />
-      <label for="docked">Docked</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="finalChargePosition"
-        value="Engaged"
-        id="engaged"
-        required
-      />
-      <label for="engaged">Engaged</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="finalChargePosition"
-        value="Attempted"
-        id="attempted"
-        required
-      />
-      <label for="attempted">Attempted</label>
-    </div>
-    <div class="radio">
-      <input
-        type="radio"
-        name="finalChargePosition"
-        value="None"
-        id="none"
-        required
-        checked
-      />
-      <label for="none">None</label>
-    </div>
-  </div>
-
-  <hr />
-
-  <div class="grid">
-    <input
-      name="allianceDocked"
-      placeholder="Alliance docked"
-      type="tel"
-      pattern="[0-3]"
-      novalidate
-      required
-    />
-    <input
-      name="linksScored"
-      placeholder="Links Scored"
-      type="tel"
-      pattern="[0-9]"
-      novalidate
-      required
-    />
-  </div>
-
   <br />
+
+	<div class="grid">
+		<div>
+			<input type="checkbox" name="trap" id="trap">
+			<label for="trap">Trap</label>
+		</div>
+		<div>
+			<input type="checkbox" name="climb" id="climb">
+			<label for="climb">Climb</label>
+		</div>
+		<div>
+			<input type="checkbox" name="melody" id="melody">
+			<label for="melody">Melody</label>
+		</div>
+	</div>
 
   <div class="grid">
     <button

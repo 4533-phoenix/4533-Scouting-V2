@@ -28,13 +28,6 @@
 <h1>Prematch</h1>
 
 <form use:form>
-  <FieldPosition
-    name="startingPosition"
-    startValue={initialValues ? initialValues["startingPosition"] : null}
-  />
-
-  <hr />
-
   <div class="grid">
     <input
       name="scouterInitials"
