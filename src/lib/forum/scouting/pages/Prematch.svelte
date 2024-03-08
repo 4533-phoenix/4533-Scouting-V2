@@ -3,7 +3,6 @@
 
   import { createForm } from "felte";
   import { onMount } from "svelte";
-  import FieldPosition from "../components/FieldPosition.svelte";
 
   export let initialValues;
   export let onSubmit;
@@ -84,6 +83,11 @@
   <div class="grid">
     <label for="matchType">Match Type:</label>
 
+    
+    <div class="radio">
+      <input type="radio" name="matchType" value="Prac" id="prac" required />
+      <label for="qual">Practice</label>
+    </div>
     <div class="radio">
       <input type="radio" name="matchType" value="Qual" id="qual" required />
       <label for="qual">Qualification</label>
